@@ -1,0 +1,14 @@
+{
+  "name": "react-native-client",
+  "version": "0.0.1",
+  "description": "React-Native SocketIO client for rpi-unicorn-leds project",
+  "author": "Stephanie Nemeth",
+  "private": true,
+  "main": "main.js",
+  "dependencies": {
+    "exponent": "^10.0.4",
+    "react": "~15.3.2",
+    "react-native": "github:exponentjs/react-native#sdk-10.1.2",
+    "socket.io": "^1.5.1"
+  }
+}
