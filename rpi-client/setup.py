@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name='rpi-unicorn-client',
     version='0.1',
-    packages=['unicornhat'],
+    packages=['unicornhat', 'socketIO-client'],
     url='https://github.com/traumverloren/rpi-unicorn-leds',
     license='MIT',
     author='Stephanie Nemeth',
