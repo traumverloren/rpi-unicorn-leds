@@ -3,8 +3,8 @@ from socketIO_client import SocketIO
 def connect():
     print('connected to the server')
 
-def updateState(state):
-    print("The new state on the RPi", state)
+def updateState(*args):
+    print("The new state on the RPi", args)
 
 
 def main():

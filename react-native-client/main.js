@@ -1,10 +1,11 @@
 import Exponent from 'exponent';
-import React from 'react';
+import React, { Component } from 'react';
 
 import {
   StyleSheet,
   Text,
   View,
+  TouchableHighlight,
 } from 'react-native';
 
 // Need to require instead of import so we can set the user agent first
@@ -20,15 +21,29 @@ socket.on('updateState', function (data) {
     console.log(data);
   });
 
-socket.emit('stateChanged', "Hi from React Native!");
-
-class App extends React.Component {
+class App extends Component {
 
   render() {
     return (
       <View style={styles.container}>
-        <Text>Open up main.js to start working on your app!</Text>
+        <Text>Press my button:</Text>
+        <MyButton />
       </View>
+    );
+  }
+}
+
+class MyButton extends Component {
+  _onPressButton() {
+    console.log("You tapped the button!");
+    socket.emit('stateChanged', "Button Pressed from React Native!");
+  }
+
+  render() {
+    return (
+      <TouchableHighlight onPress={this._onPressButton}>
+        <Text style={{color: 'red', fontWeight: 'bold'}}>Press</Text>
+      </TouchableHighlight>
     );
   }
 }
