@@ -17,7 +17,7 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
-      var socket = io.connect('/');
+      var socket = io.connect("https://peaceful-oasis-97526.herokuapp.com");
 
       $('#onoffswitch').change(function(){
         socket.emit('stateChanged', this.checked);

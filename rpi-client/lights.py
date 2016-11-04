@@ -1,3 +1,10 @@
+# for testing, make sure the virtual env is set:
+# VIRTUAL_ENV=$HOME/.virtualenv
+# source $VIRTUAL_ENV/bin/activate
+
+# To RUN:
+# python lights.py
+
 from socketIO_client import SocketIO
 
 def connect():
@@ -8,7 +15,7 @@ def updateState(*args):
 
 
 def main():
-    socketIO = SocketIO('localhost', 3000)
+    socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
     # Listen
     socketIO.on('connect', connect)
 
