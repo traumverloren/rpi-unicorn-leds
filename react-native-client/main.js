@@ -11,7 +11,7 @@ import {
 // Need to require instead of import so we can set the user agent first
 // This must be below your `window.navigator` hack above
 const io = require('socket.io-client/socket.io');
-const socket = io('http://localhost:3000', {});
+const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
 
 socket.on('connect', () => {
   console.log('React Native is connected to the Server!');
