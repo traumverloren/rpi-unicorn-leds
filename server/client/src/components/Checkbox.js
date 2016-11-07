@@ -7,7 +7,6 @@ class Checkbox extends Component {
   constructor() {
     super();
     this.state = {checked: false};
-    this.handleChange = this.handleChange.bind(this);
   }
 
   handleChange(event) {
@@ -21,7 +20,7 @@ class Checkbox extends Component {
       <div>
         <input type="checkbox"
           checked={this.state.checked}
-          onChange={this.handleChange} />
+          onChange={(event) => this.handleChange(event)} />
       </div>
     );
   }
