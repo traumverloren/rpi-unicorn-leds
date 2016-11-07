@@ -26,7 +26,7 @@ io.on('connection', function (socket) {
   console.log("Client Connected on Server! Woot!");
 
   socket.on('stateChanged', function(state){
-    console.log(`StateChanged on server: ${state}`);
+    console.log(`StateChanged on server: ${JSON.stringify(state)}`);
     io.emit("updateState", state);
   });
 });
