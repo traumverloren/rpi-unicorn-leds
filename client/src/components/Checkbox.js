@@ -13,7 +13,7 @@ class Checkbox extends Component {
   handleChange(event) {
     this.setState({checked: event.target.checked});
     // console.log(this.state.checked);
-    socket.emit('stateChanged', "Button Pressed from React Web!");
+    socket.emit('stateChanged', { message: "Button Pressed from React Web!", checked: event.target.checked });
   }
 
   render() {
