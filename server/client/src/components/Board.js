@@ -25,6 +25,11 @@ class Board extends Component {
     event.target.blur();
   }
 
+  submitBoard(event) {
+    console.log(JSON.stringify(this.state.squares));
+    event.target.blur();
+  }
+
   handleClick(id) {
     const squares = this.state.squares.slice();
     squares[id].isSelected = !squares[id].isSelected;
@@ -53,7 +58,7 @@ class Board extends Component {
           ))}
         </div>
         <div>
-          <button className="btn btn-success" style={{margin: '5px'}} >Submit</button>
+          <button className="btn btn-success" style={{margin: '5px'}} onClick={(event) => this.submitBoard(event)}>Submit</button>
           <button className="btn btn-danger" style={{margin: '5px'}} onClick={(event) => this.clearBoard(event)}>Clear</button>
         </div>
       </div>
