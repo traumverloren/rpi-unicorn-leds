@@ -1,34 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Square extends Component {
-  constructor() {
-    super();
-    this.state = {isSelected: false};
-  }
-
-  componentDidUpdate() {
-    console.log('stateChanged', { message: "Button Pressed from React Web!", isSelected: this.state.isSelected, id: this.props.id });
-  }
-
-  handleChange(event) {
-    event.preventDefault()
-    this.setState({
-      isSelected: !this.state.isSelected
-    });
-    event.target.blur();
-  }
-
-  render() {
-    var className = 'square' + (this.state.isSelected ? '-selected' : '');
-    return (
-      <button className={className}
-          onClick={(event) => this.handleChange(event)}
-          style={{
-            width: '100%',
-            height: '100%'
-          }} />
-    );
-  }
+function Square(props) {
+  var className = 'square' + (props.isSelected ? '-selected' : '');
+  return (
+    <div className={className}
+        onClick={() => props.onClick()}
+        style={{
+          width: '100%',
+          height: '100%'
+        }}>
+      </div>
+  );
 }
 
 export default Square;

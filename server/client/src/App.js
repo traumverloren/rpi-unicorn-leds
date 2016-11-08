@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './App.css'
-import Checkbox from './components/Checkbox'
 import Board from './components/Board'
 
 const io = require('socket.io-client/socket.io');
@@ -18,11 +17,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h3>Light All The Lights:</h3>
-        <Checkbox />
-        <br />
-        <h3>Select Your Lights:</h3>
-
+        <h3>Design A Light Pattern:</h3>
         <Board />
       </div>
     );
