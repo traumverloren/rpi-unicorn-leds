@@ -17,7 +17,7 @@ class Checkbox extends Component {
 
   render() {
     return (
-      <div>
+      <div class="checkbox">
         <input type="checkbox"
           checked={this.state.checked}
           onChange={(event) => this.handleChange(event)} />
