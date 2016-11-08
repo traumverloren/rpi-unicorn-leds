@@ -17,7 +17,6 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h3>Design A Light Pattern:</h3>
         <Board />
       </div>
     );
