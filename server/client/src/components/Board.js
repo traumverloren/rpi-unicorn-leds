@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import Square from './Square';
 
+const io = require('socket.io-client/socket.io');
+const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
+
 class Board extends Component {
   constructor() {
     super();
@@ -17,7 +20,7 @@ class Board extends Component {
         });
     }
 
-    return { squares }
+    return { squares, isSubmitted: false }
   }
 
   clearBoard(event) {
@@ -26,8 +29,10 @@ class Board extends Component {
   }
 
   submitBoard(event) {
-    console.log(JSON.stringify(this.state.squares));
+    this.setState({isSubmitted: true});
     event.target.blur();
+    socket.emit('stateChanged', { message: "Light Design Submitted", squares: this.state.squares });
+    console.log(JSON.stringify(this.state));
   }
 
   handleClick(id) {
@@ -37,9 +42,17 @@ class Board extends Component {
   }
 
   render() {
+    var successButton = 'btn btn-success' + (this.state.isSubmitted ? ' disabled' : '');
+
+    if (this.state.isSubmitted) {
+      var alert = <div className="alert alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
+    }
+
     return (
       // keep board a nice square shape even on mobile!
       <div>
+        {alert}
+        <h3>Design A Light Pattern:</h3>
         <div style={{
           listStyle: 'none',
           height: '40vmax',
@@ -58,7 +71,7 @@ class Board extends Component {
           ))}
         </div>
         <div>
-          <button className="btn btn-success" style={{margin: '5px'}} onClick={(event) => this.submitBoard(event)}>Submit</button>
+          <button className={successButton} style={{margin: '5px'}} onClick={(event) => this.submitBoard(event)}>Submit</button>
           <button className="btn btn-danger" style={{margin: '5px'}} onClick={(event) => this.clearBoard(event)}>Clear</button>
         </div>
       </div>
