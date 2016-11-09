@@ -5,6 +5,8 @@
 # To RUN:
 # python lights.py
 
+import os
+
 from socketIO_client import SocketIO
 
 def connect():
@@ -15,9 +17,13 @@ def updateState(*args):
 
 
 def main():
-    socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
+    socketIO = SocketIO('http://localhost:3000')
+
     # Listen
     socketIO.on('connect', connect)
+
+    socketIO.emit('authentication', {'key': os.environ['SOCKET_KEY']})
+
 
     # Gets msg from other client!
     socketIO.on('updateState', updateState)
