@@ -26,15 +26,17 @@ var io = require('socket.io').listen(server);
 
 console.log("STARTING SERVER 🌈 🦄 ✨");
 
-require('socketio-auth')(io, {
-  authenticate: function (socket, data, callback) {
-    if (data.key == process.env.SOCKET_KEY) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Bad credentials"))
-    }
-  }
-});
+// TURN OFF auth for now.
+// 
+// require('socketio-auth')(io, {
+//   authenticate: function (socket, data, callback) {
+//     if (data.key == process.env.SOCKET_KEY) {
+//       return callback(null, true);
+//     } else {
+//       return callback(new Error("Bad credentials"))
+//     }
+//   }
+// });
 
 io.on('connection', function(socket){
   console.log("CLIENT CONNECTED 💃");
