@@ -2,7 +2,23 @@ import React, { Component } from 'react';
 import Square from './Square';
 
 const io = require('socket.io-client/socket.io');
-const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
+const socket = io('http://localhost:3000', {});
+
+socket.on('connect', function(){
+  socket.emit('authentication', {key: process.env.REACT_APP_SOCKET_KEY});
+
+  socket.on('unauthorized', function(err){
+    console.log("There was an error with the authentication:", err.message);
+  });
+
+  socket.on('authenticated', function() {
+    console.log('React Web app is connected to the Server!');
+  });
+
+  socket.on('updateState', function (data) {
+      console.log(data);
+    });
+});
 
 class Board extends Component {
   constructor() {
@@ -32,7 +48,7 @@ class Board extends Component {
     this.setState({isSubmitted: true});
     event.target.blur();
     socket.emit('stateChanged', { message: "Light Design Submitted", squares: this.state.squares });
-    console.log(JSON.stringify(this.state));
+    // console.log(JSON.stringify(this.state));
   }
 
   handleClick(id) {

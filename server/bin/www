@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
 
+require('dotenv').config()
+
 /**
  * Get port from environment and store in Express.
  */
@@ -22,14 +24,33 @@ app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 
-io.on('connection', function (socket) {
-  console.log("Client Connected on Server! Woot!");
+console.log("STARTING SERVER 🌈 🦄 ✨");
+
+require('socketio-auth')(io, {
+  authenticate: function (socket, data, callback) {
+    console.log(data);
+    if (data.key == process.env.SOCKET_KEY) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Bad credentials"))
+    }
+  }
+});
+
+io.on('connection', function(socket){
+  console.log("CLIENT CONNECTED 💃");
 
   socket.on('stateChanged', function(state){
     console.log(`StateChanged on server: ${JSON.stringify(state)}`);
     io.emit("updateState", state);
   });
+
+  socket.on('disconnect', function(){
+    console.log('client disconnected 💩')
+    socket.disconnect();
+  });
 });
+
 /**
  * Listen on provided port, on all network interfaces.
  */
