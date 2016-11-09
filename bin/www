@@ -28,7 +28,6 @@ console.log("STARTING SERVER 🌈 🦄 ✨");
 
 require('socketio-auth')(io, {
   authenticate: function (socket, data, callback) {
-    console.log(data);
     if (data.key == process.env.SOCKET_KEY) {
       return callback(null, true);
     } else {
