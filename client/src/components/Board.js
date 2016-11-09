@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Square from './Square';
 
 const io = require('socket.io-client/socket.io');
-const socket = io('http://localhost:3000', {});
+const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
 
 socket.on('connect', function(){
   socket.emit('authentication', {key: process.env.REACT_APP_SOCKET_KEY});
