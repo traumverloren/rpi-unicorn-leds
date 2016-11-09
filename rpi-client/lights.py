@@ -17,7 +17,7 @@ def updateState(*args):
 
 
 def main():
-    socketIO = SocketIO('http://localhost:3000')
+    socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
 
     # Listen
     socketIO.on('connect', connect)
