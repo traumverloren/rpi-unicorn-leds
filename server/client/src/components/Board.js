@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Square from './Square';
+import { HuePicker } from 'react-color';
 
 const io = require('socket.io-client/socket.io');
 const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
@@ -40,13 +41,14 @@ class Board extends Component {
         squares.push({
             id: i,
             coords: [x,y],
-            isSelected: false
+            isSelected: false,
+            color: {r: 44, g: 62, b: 80}
         });
         i++;
       }
     }
 
-    return { squares, isSubmitted: false }
+    return { squares, isSubmitted: false, color: {r: 255, g: 235, b: 59} }
   }
 
   clearBoard(event) {
@@ -61,14 +63,19 @@ class Board extends Component {
     // console.log(JSON.stringify(this.state));
   }
 
+  handleChangeComplete = (color) => {
+    this.setState({ color: color.rgb });
+  };
+
   handleClick(id) {
     const squares = this.state.squares.slice();
     squares[id].isSelected = !squares[id].isSelected;
+    squares[id].color = this.state.color;
     this.setState({squares: squares});
   }
 
   render() {
-    var successButton = 'btn btn-success' + (this.state.isSubmitted ? ' disabled' : '');
+    var submitButton = 'btn btn-success' + (this.state.isSubmitted ? ' disabled' : '');
 
     if (this.state.isSubmitted) {
       var alert = <div className="alert alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
@@ -79,6 +86,13 @@ class Board extends Component {
       <div>
         {alert}
         <h3>Design A Light Pattern:</h3>
+        <div style={{display: 'flex', justifyContent: 'center', margin: '20px 0'}}>
+          <div style={{width: '316px'}}>
+            <HuePicker
+              color={ this.state.color }
+              onChangeComplete={ this.handleChangeComplete }/>
+          </div>
+        </div>
         <div style={{
           listStyle: 'none',
           height: '40vmax',
@@ -92,13 +106,28 @@ class Board extends Component {
           {this.state.squares.map((square) => (
             <div key={square.id}
                  style={{flex: '0 0 12.5%', height: '12.5%'}}>
-              <Square id={square.id} isSelected={square.isSelected} coords={square.coords} onClick={() => this.handleClick(square.id)} />
+              <Square
+                id={square.id}
+                isSelected={square.isSelected}
+                coords={square.coords}
+                color={square.color}
+                onClick={() => this.handleClick(square.id)} />
             </div>
           ))}
         </div>
         <div>
-          <button className={successButton} style={{margin: '5px'}} onClick={(event) => this.submitBoard(event)}>Submit</button>
-          <button className="btn btn-danger" style={{margin: '5px'}} onClick={(event) => this.clearBoard(event)}>Clear</button>
+          <button disabled={this.state.isSubmitted}
+            className={submitButton}
+            style={{margin: '5px'}}
+            onClick={(event) => this.submitBoard(event)}>
+            Submit
+          </button>
+          <button
+            className="btn btn-danger"
+            style={{margin: '5px'}}
+            onClick={(event) => this.clearBoard(event)}>
+            Clear
+          </button>
         </div>
       </div>
 
