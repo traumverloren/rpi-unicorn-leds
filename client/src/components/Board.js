@@ -75,7 +75,8 @@ class Board extends Component {
   }
 
   render() {
-    var submitButton = 'btn btn-success' + (this.state.isSubmitted ? ' disabled' : '');
+    // var submitButton = 'btn btn-success' + (this.state.isSubmitted ? ' disabled' : '');
+    var submitButton = 'btn btn-success'
 
     if (this.state.isSubmitted) {
       var alert = <div className="alert alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
@@ -116,7 +117,7 @@ class Board extends Component {
           ))}
         </div>
         <div>
-          <button disabled={this.state.isSubmitted}
+          <button
             className={submitButton}
             style={{margin: '5px'}}
             onClick={(event) => this.submitBoard(event)}>
