@@ -5,6 +5,8 @@ const io = require('socket.io-client/socket.io');
 const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
 
 socket.on('connect', function(){
+  console.log('React Web app is connected to the Server!');
+
   socket.emit('authentication', {key: process.env.REACT_APP_SOCKET_KEY});
 
   socket.on('unauthorized', function(err){
@@ -16,8 +18,8 @@ socket.on('connect', function(){
   });
 
   socket.on('updateState', function (data) {
-      console.log(data);
-    });
+    console.log(data);
+  });
 });
 
 class Board extends Component {
@@ -29,11 +31,19 @@ class Board extends Component {
   getBoard() {
     const squares = [];
 
-    for (let i = 0; i < 64; i++) {
+    // i is the square number 0 - 63.
+    var i = 0;
+
+    // Loop through to generate the x,y coords.
+    for (let y = 0; y < 8; y++) {
+      for (let x = 0; x < 8; x++) {
         squares.push({
             id: i,
+            coords: [x,y],
             isSelected: false
         });
+        i++;
+      }
     }
 
     return { squares, isSubmitted: false }
@@ -82,7 +92,7 @@ class Board extends Component {
           {this.state.squares.map((square) => (
             <div key={square.id}
                  style={{flex: '0 0 12.5%', height: '12.5%'}}>
-              <Square id={square.id} isSelected={square.isSelected} onClick={() => this.handleClick(square.id)} />
+              <Square id={square.id} isSelected={square.isSelected} coords={square.coords} onClick={() => this.handleClick(square.id)} />
             </div>
           ))}
         </div>
