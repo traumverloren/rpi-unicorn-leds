@@ -18,22 +18,28 @@ def connect():
 # def authenticated(*args):
 #     print('RPI is connected to the Server')
 
-def updateState(*args):
-    print("The new state on the RPi", args)
+def updateState(data):
+    squares = data['squares']
+    print(squares)
 
+    # iterate through array and find the lights, turn them on.
     unicorn.set_layout(unicorn.AUTO)
-    unicorn.rotation(0)
+    unicorn.rotation(180)
     unicorn.brightness(0.5)
-    width,height=unicorn.get_shape()
 
-    for y in range(height):
-      for x in range(width):
-        unicorn.set_pixel(x,y,255,0,255)
-        unicorn.show()
-        time.sleep(0.05)
+    for square in squares:
+        if square['isSelected']:
+            x = square['coords'][0]
+            y = square['coords'][1]
+            unicorn.set_pixel(x,y,255,0,255)
 
-    time.sleep(1)
+    unicorn.show()
+    time.sleep(3)
+
     unicorn.off()
+
+        # for coords in pattern:
+        #     UH.set_pixel(coords[0],coords[1], 0, 0xFF, 0)
 
 
 def main():
@@ -43,7 +49,6 @@ def main():
     socketIO.on('connect', connect)
 
     # socketIO.emit('authentication', {'key': os.environ['SOCKET_KEY']})
-
     # socketIO.on('authenticated', authenticated)
 
     # Gets msg from other client!
