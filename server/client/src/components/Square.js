@@ -14,6 +14,7 @@ function Square({ isSelected, onClick }) {
 }
 
 Square.PropTypes = {
+  coords: PropTypes.array.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
 }
