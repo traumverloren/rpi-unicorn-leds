@@ -25,22 +25,22 @@ def updateState(data):
     # iterate through array and find the lights, turn them on.
     unicorn.set_layout(unicorn.AUTO)
     unicorn.rotation(180)
-    unicorn.brightness(0.5)
+    unicorn.brightness(0.3)
 
     for square in squares:
         if square['isSelected']:
             x = square['coords'][0]
             y = square['coords'][1]
-            unicorn.set_pixel(x,y,255,0,255)
+            r = square['color']['r']
+            g = square['color']['g']
+            b = square['color']['b']
+
+            unicorn.set_pixel(x,y,r,g,b)
 
     unicorn.show()
-    time.sleep(3)
+    time.sleep(10)
 
     unicorn.off()
-
-        # for coords in pattern:
-        #     UH.set_pixel(coords[0],coords[1], 0, 0xFF, 0)
-
 
 def main():
     socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
