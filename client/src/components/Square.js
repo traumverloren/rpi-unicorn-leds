@@ -1,19 +1,28 @@
 import React, { PropTypes } from 'react';
 
-function Square({ isSelected, onClick }) {
-  var className = 'square' + (isSelected ? '-selected' : '');
+function Square({ isSelected, onClick, color }) {
+  var squareStyle;
+
+  if (isSelected) {
+    squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: '100%', height: '100%'}
+  } else {
+    squareStyle = {backgroundColor: '#2c3e50', width: '100%', height: '100%'}
+  }
+
   return (
-    <div className={className}
+    <div className='square'
         onClick={onClick}
-        style={{
-          width: '100%',
-          height: '100%'
-        }}>
+        style={squareStyle}>
       </div>
   );
 }
 
 Square.PropTypes = {
+  color: React.PropTypes.shape({
+      r: React.PropTypes.number.isRequired,
+      g: React.PropTypes.number.isRequired,
+      b: React.PropTypes.number.isRequired
+    }),
   coords: PropTypes.array.isRequired,
   isSelected: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired,
