@@ -1,8 +1,18 @@
 html, body {
     height: 100%;
+    background: Gainsboro;
 }
 body {
     margin: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Press Start 2P', cursive;
+}
+
+p {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
 }
 
 .square {
@@ -10,4 +20,91 @@ body {
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
+}
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+.fa-heart-o {
+  -webkit-transition: -webkit-transform .8s ease-in-out;
+  transition: transform .8s ease-in-out;
+  /*color: 'DarkTurquoise';*/
+}
+
+.fa-heart-o:hover {
+  -webkit-transform: rotate(360);
+  transform: rotate(360deg);
+}
+
+/*button {
+  border: 6px ridge #bbb;
+  text-decoration: underline;
+  text-align: center;
+  font-size: 16px;
+}*/
+
+button{
+  font-family: 'VT323', monospace;
+  text-decoration: none;
+  text-align: center;
+  font-size: 16px;
+}
+
+.submit-button {
+  background-color: Lime;
+  border: 6px ridge Lime;
+}
+
+.submit-button:active {
+  background-color: LimeGreen;
+}
+
+.reset-button {
+  background-color: Red;
+  border: 6px ridge Red;
+}
+
+.reset-button:active {
+  background-color: FireBrick;
+}
+
+.alert {
+  background-color: Lime;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  position: absolute;
+  z-index: 101;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  line-height: 2;
+  overflow: hidden;
+  -webkit-transform: translateY(-50px);
+  -webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
+  -moz-transform:    translateY(-50px);
+  -moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;
+}
+
+@-webkit-keyframes slideDown {
+    0%, 100% { -webkit-transform: translateY(-50px); }
+    10%, 90% { -webkit-transform: translateY(0px); }
+}
+@-moz-keyframes slideDown {
+    0%, 100% { -moz-transform: translateY(-50px); }
+    10%, 90% { -moz-transform: translateY(0px); }
 }
