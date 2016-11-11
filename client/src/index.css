@@ -21,23 +21,6 @@ p {
   margin-top: -1px;
   padding: 0;
 }
-.example-enter {
-  opacity: 0.01;
-}
-
-.example-enter.example-enter-active {
-  opacity: 1;
-  transition: opacity 500ms ease-in;
-}
-
-.example-leave {
-  opacity: 1;
-}
-
-.example-leave.example-leave-active {
-  opacity: 0.01;
-  transition: opacity 300ms ease-in;
-}
 
 .fa-heart-o {
   -webkit-transition: -webkit-transform .8s ease-in-out;
@@ -50,18 +33,17 @@ p {
   transform: rotate(360deg);
 }
 
-/*button {
-  border: 6px ridge #bbb;
-  text-decoration: underline;
-  text-align: center;
-  font-size: 16px;
-}*/
-
 button{
   font-family: 'VT323', monospace;
   text-decoration: none;
   text-align: center;
   font-size: 16px;
+}
+
+.submit-button-disabled {
+  background-color: Lime;
+  border: 6px ridge Lime;
+  opacity: 0.4;
 }
 
 .submit-button {
