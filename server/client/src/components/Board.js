@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Square from './Square';
 import { HuePicker } from 'react-color';
+import Footer from './Footer';
 
 const io = require('socket.io-client/socket.io');
 const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
@@ -75,18 +76,15 @@ class Board extends Component {
   }
 
   render() {
-    // var submitButton = 'btn btn-success' + (this.state.isSubmitted ? ' disabled' : '');
-    var submitButton = 'btn btn-success'
-
     if (this.state.isSubmitted) {
-      var alert = <div className="alert alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
+      var alert = <div className="alert" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
     }
 
     return (
       // keep board a nice square shape even on mobile!
       <div>
         {alert}
-        <h3>Design A Light Pattern:</h3>
+        <h4>Design A Light Pattern!</h4>
         <div style={{display: 'flex', justifyContent: 'center', margin: '20px 0'}}>
           <div style={{width: '316px'}}>
             <HuePicker
@@ -118,18 +116,19 @@ class Board extends Component {
         </div>
         <div>
           <button
-            className={submitButton}
+            className="submit-button"
             style={{margin: '5px'}}
             onClick={(event) => this.submitBoard(event)}>
             Submit
           </button>
           <button
-            className="btn btn-danger"
+            className="reset-button"
             style={{margin: '5px'}}
             onClick={(event) => this.clearBoard(event)}>
             Clear
           </button>
         </div>
+        <Footer />
       </div>
 
     );
