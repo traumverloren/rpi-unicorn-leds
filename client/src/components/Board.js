@@ -86,7 +86,8 @@ class Board extends Component {
       // keep board a nice square shape even on mobile!
       <div>
         {alert}
-        <h4>Design A Light Pattern!</h4>
+        <h4>Make Pixel LED Art</h4>
+        <p><i className="fa fa-magic"></i> Pick colors, click squares, & send a design to my Raspberry Pi!</p>
         <div style={{display: 'flex', justifyContent: 'center', margin: '20px 0'}}>
           <div style={{width: '316px'}}>
             <HuePicker
