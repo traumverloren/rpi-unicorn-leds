@@ -28,26 +28,49 @@ console.log("STARTING SERVER 🌈 🦄 ✨");
 
 // TURN OFF auth for now.
 //
-// require('socketio-auth')(io, {
-//   authenticate: function (socket, data, callback) {
-//     if (data.key == process.env.SOCKET_KEY) {
-//       return callback(null, true);
-//     } else {
-//       return callback(new Error("Bad credentials"))
-//     }
-//   }
-// });
+require('socketio-auth')(io, {
+  authenticate: function (socket, data, callback) {
+    if (data.key == process.env.SOCKET_KEY) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("Bad credentials"))
+    }
+  }
+});
+
+var piClient = {};
 
 io.on('connection', function(socket){
-  console.log("CLIENT CONNECTED 💃");
+  console.log("CLIENT CONNECTED 💃 ", socket.id);
+
+  // let any newly connected client know if pi is connected
+  if (piClient.id) {
+    io.emit("piConnected");
+    console.log("Pi in da house", piClient);
+  }
 
   socket.on('stateChanged', function(state){
     console.log(`StateChanged on server: ${JSON.stringify(state)}`);
     io.emit("updateState", state);
   });
 
+  socket.on('piConnected', function(message){
+    console.log('Raspberry Pi is online');
+    piClient.id = socket.id;
+    io.emit("piConnected");
+  });
+
   socket.on('disconnect', function(){
     console.log('client disconnected 💩')
+    if (socket.id == piClient.id) {
+      console.log("Bye Bye 👋 👋  Pi Client Disconnected", socket.id);
+
+      // clear out piClient if disconnected
+      var y = piClient;
+      piClient = {};
+      console.log('piDisconnected', piClient);
+      io.emit("piDisconnected");
+    }
     socket.disconnect();
   });
 });

@@ -7,16 +7,32 @@
 
 import os
 import time
+import logging
 import unicornhat as unicorn
 
 from socketIO_client import SocketIO
 
+logging.getLogger('socketIO-client').setLevel(logging.DEBUG)
+
+socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
+
+
 def connect():
     print('connected to the server')
+    socketIO.emit('authentication', {'key': os.environ['SOCKET_KEY']})
+    socketIO.on('authenticated', authenticated)
+    socketIO.emit('piConnected')
 
+def reconnect():
+    print('reconnected to the server')
+    socketIO.emit('piConnected')
 
-# def authenticated(*args):
-#     print('RPI is connected to the Server')
+def on_disconnect():
+    print('disconnected')
+    socketIO.emit('piDisconnected')
+
+def authenticated(*args):
+    print('RPI is connected to the Server')
 
 def updateState(data):
     squares = data['squares']
@@ -43,19 +59,22 @@ def updateState(data):
     unicorn.off()
 
 def main():
-    socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
-
     # Listen
     socketIO.on('connect', connect)
-
-    # socketIO.emit('authentication', {'key': os.environ['SOCKET_KEY']})
-    # socketIO.on('authenticated', authenticated)
 
     # Gets msg from other client!
     socketIO.on('updateState', updateState)
 
+    socketIO.on('reconnect', reconnect);
+
+    socketIO.on('disconnect', on_disconnect);
+
     # Keeps the socket open indefinitely...
-    socketIO.wait()
+    socketIO.wait();
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print 'Killed by user'
+        sys.exit(0)
