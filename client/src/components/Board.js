@@ -89,6 +89,7 @@ class Board extends Component {
 
   render() {
     var submitButton = 'submit-button' + (this.state.isSubmitted || !this.state.piConnected ? '-disabled' : '');
+    var resetButton = 'reset-button' + (!this.state.piConnected ? '-disabled' : '');
 
     if (this.state.isSubmitted) {
       var alert = <div className="alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
@@ -137,14 +138,15 @@ class Board extends Component {
         </div>
         <div>
           <button
-            disabled={this.state.isSubmitted}
             className={submitButton}
+            disabled={this.state.isSubmitted}
             style={{margin: '5px'}}
             onClick={(event) => this.submitBoard(event)}>
             Submit
           </button>
           <button
-            className="reset-button"
+            className={resetButton}
+            disabled={!this.state.piConnected}
             style={{margin: '5px'}}
             onClick={(event) => this.clearBoard(event)}>
             Clear

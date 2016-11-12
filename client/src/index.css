@@ -60,6 +60,12 @@ button{
   border: 6px ridge Red;
 }
 
+.reset-button-disabled {
+  background-color: Red;
+  border: 6px ridge Red;
+  opacity: 0.4;
+}
+
 .reset-button:active {
   background-color: FireBrick;
 }
