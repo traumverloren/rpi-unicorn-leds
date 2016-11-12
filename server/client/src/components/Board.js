@@ -92,7 +92,9 @@ class Board extends Component {
 
     if (this.state.isSubmitted) {
       var alert = <div className="alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
-    } else if (!this.state.piConnected) {
+    }
+
+    if (!this.state.piConnected) {
       alert = <div className="alert-danger" role="alert">Raspberry Pi is currently offline. <i className="fa fa-frown-o" aria-hidden="true"></i> Try again later!</div>;
     }
 
