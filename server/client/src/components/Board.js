@@ -2,33 +2,46 @@ import React, { Component } from 'react';
 import Square from './Square';
 import { HuePicker } from 'react-color';
 import Footer from './Footer';
+import io from 'socket.io-client';
 
-const io = require('socket.io-client/socket.io');
-const socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
+let socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
 
-socket.on('connect', function(){
-  console.log('React Web app is connected to the Server!');
-
-  socket.emit('authentication', {key: process.env.REACT_APP_SOCKET_KEY});
-
-  socket.on('unauthorized', function(err){
-    console.log("There was an error with the authentication:", err.message);
-  });
-
-  socket.on('authenticated', function() {
-    console.log('React Web app is connected to the Server!');
-  });
-
-  socket.on('updateState', function (data) {
-    console.log(data);
-  });
-});
+// TODO move socket io up to App root and pass down thru props
 
 class Board extends Component {
   constructor() {
     super();
-    this.state = this.getBoard();
-  };
+    this.state = this.getBoard()
+
+    this.fetchPiStatus()
+
+    socket.on('connect', () => {
+      socket.emit('authentication', {key: process.env.REACT_APP_SOCKET_KEY});
+
+      socket.on('unauthorized', (err) => {
+        console.log("There was an error with the authentication:", err.message);
+      });
+
+      socket.on('authenticated', () => {
+        console.log('React Web app authenticated!');
+      });
+
+      socket.emit("clientConnected");
+    })
+  }
+
+  fetchPiStatus() {
+    // if pi is connected, set state to true
+    this.state.socket.on('piConnected', () => {
+      this.setState({ piConnected: true})
+    })
+
+    // if pi is disconnected, set state to false
+    this.state.socket.on('piDisconnected', () => {
+      this.setState({ piConnected: false})
+    });
+
+  }
 
   getBoard() {
     const squares = [];
@@ -49,7 +62,7 @@ class Board extends Component {
       }
     }
 
-    return { squares, isSubmitted: false, color: {r: 255, g: 235, b: 59} }
+    return { squares, isSubmitted: false, color: {r: 255, g: 235, b: 59}, socket, piConnected: true}
   }
 
   clearBoard(event) {
@@ -61,7 +74,6 @@ class Board extends Component {
     this.setState({isSubmitted: true});
     event.target.blur();
     socket.emit('stateChanged', { message: "Light Design Submitted", squares: this.state.squares });
-    // console.log(JSON.stringify(this.state));
   }
 
   handleChangeComplete = (color) => {
@@ -76,11 +88,15 @@ class Board extends Component {
   }
 
   render() {
-    var submitButton = 'submit-button' + (this.state.isSubmitted ? '-disabled' : '');
+    var submitButton = 'submit-button' + (this.state.isSubmitted || !this.state.piConnected ? '-disabled' : '');
 
     if (this.state.isSubmitted) {
-      var alert = <div className="alert" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
+      var alert = <div className="alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
+    } else if (!this.state.piConnected) {
+      alert = <div className="alert-danger" role="alert">Raspberry Pi is currently offline. <i className="fa fa-frown-o" aria-hidden="true"></i> Try again later!</div>;
     }
+
+
 
     return (
       // keep board a nice square shape even on mobile!

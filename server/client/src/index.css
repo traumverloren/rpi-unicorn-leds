@@ -64,7 +64,7 @@ button{
   background-color: FireBrick;
 }
 
-.alert {
+.alert-success {
   background-color: Lime;
   font-family: 'VT323', monospace;
   font-size: 18px;
@@ -80,6 +80,24 @@ button{
   -webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
   -moz-transform:    translateY(-50px);
   -moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;
+}
+
+.alert-danger {
+  background-color: Red;
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  position: absolute;
+  z-index: 101;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  line-height: 2.5;
+  overflow: hidden;
+  /*-webkit-transform: translateY(-50px);
+  -webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
+  -moz-transform:    translateY(-50px);
+  -moz-animation:    slideDown 2.5s 1.0s 1 ease forwards;*/
 }
 
 @-webkit-keyframes slideDown {
