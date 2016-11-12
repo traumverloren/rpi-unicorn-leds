@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 
 let socket = io('https://peaceful-oasis-97526.herokuapp.com', {});
 
-// TODO move socket io up to App root and pass down thru props
+// TODO move socketio up to App root and pass down thru props
 
 class Board extends Component {
   constructor() {
