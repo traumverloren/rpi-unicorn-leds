@@ -3,7 +3,7 @@ import './App.css'
 import Board from './components/Board'
 import io from 'socket.io-client'
 
-let socket = io('https://peaceful-oasis-97526.herokuapp.com', {})
+let socket = io('https://light-art.herokuapp.com', {})
 
 class App extends Component {
   constructor () {
