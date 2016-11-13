@@ -29,6 +29,13 @@ Using SocketIO, it is pushes state changes from the native and web apps to the R
 
   Written in ES6 using React, this client is located on the server. Users on the web can create pixel art designs to display on the Raspberry Pi.
 
+  _Features:_
+
+  - Color Palette
+  - Notification if the Raspberry Pi is offline
+  - Responsive design
+
+
 - **React-Native mobile app (Work in Progress)**
 
   Written in ES6 using React-Native, this client provides a native experience for both iOS and Android. Users can natively create pixel art designs to display on the Raspberry Pi.
