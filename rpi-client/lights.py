@@ -14,7 +14,7 @@ from socketIO_client import SocketIO
 
 logging.getLogger('socketIO-client').setLevel(logging.DEBUG)
 
-socketIO = SocketIO('https://peaceful-oasis-97526.herokuapp.com')
+socketIO = SocketIO('https://light-art.herokuapp.com')
 
 
 def connect():
