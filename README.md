@@ -1,23 +1,38 @@
-# rpi-unicorn-leds
+# [Raspberry Pi Interactive LED Art project](https://light-art.herokuapp.com)
 
-![under construction gif](https://www.heelzwaarleven.nl/underconstruction.gif)
+![rainbow lights](sparkleline.gif)
 
-This is my (WIP) final project for Harvard's CS50 Course and first attempt at raspberry pi interactive art. The goal is to interact remotely with the raspberry pi and be able to create pixel art pattern to display on the UnicornHAT.
+This is my final project for [Harvard's CS50 Course](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x) and first attempt at raspberry pi interactive art. The goal is to interact remotely with the raspberry pi and be able to create pixel art pattern to display on the UnicornHAT.
 
-I am using a lot of new, unfamiliar stuff for this project: Python, SocketIO, React-Native.
+I am using a lot of new, unfamiliar stuff for this project! e.g. Python, SocketIO, React-Native. 😏 But having a lot of fun learning and figuring out how to build this project!
 
----
+![rainbow lights](sparkleline.gif)
 
-#### Setup:
+### My Setup:
 
-Server: Express
+##### Schema:
 
-Clients:
-- Raspberry Pi 3 w/ UnicornHAT 64-led board.
-- React-Native mobile app.
+![raspberry pi socketio client server schema diagram](rasppiprojectschema.png)
 
-The Server sits between the RPi and native apps. Using SocketIO, will be able to push state changes from the native app to the RPi. And the goal from the beginning is to make this accessible remotely, not just on a local network. Should be really cool!
+##### Server: Express
 
----
+The Server is deployed to Heroku. It sits between the RPi and react web & native apps.
 
-Made with <3 by [Stephanie](https://traumverloren.github.io)
+Using SocketIO, it is pushes state changes from the native and web apps to the RPi. The goal from the beginning was to make this accessible remotely, from anyone and anywhere in the world, not just on my local network.
+
+##### **Clients:**
+- **Raspberry Pi 3 w/ UnicornHAT 64-led board.**
+
+  The RPi is coded in Python, since the UnicornHAT library is in Python. I created a python program that serves as a client with the socketio server, using a [python socketio client library](https://github.com/invisibleroads/socketIO-client), and listens for incoming messages from the other clients. It then interprets the messages and creates the LED light pattern using the [UnicornHAT library](https://github.com/pimoroni/unicorn-hat/).
+
+- **ReactJS web app.**
+
+  Written in ES6 using React, this client is located on the server. Users on the web can create pixel art designs to display on the Raspberry Pi.
+
+- **React-Native mobile app (Work in Progress)**
+
+  Written in ES6 using React-Native, this client provides a native experience for both iOS and Android. Users can natively create pixel art designs to display on the Raspberry Pi.
+
+![rainbow lights](sparkleline.gif)
+
+Made with 💚💙💜 by [Stephanie](https://traumverloren.github.io)
