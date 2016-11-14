@@ -1,5 +1,7 @@
 import Exponent from 'exponent';
 import React, { Component } from 'react';
+import { Entypo } from '@exponent/vector-icons';
+import io from 'socket.io-client/socket.io';
 
 import {
   StyleSheet,
@@ -8,9 +10,6 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-// Need to require instead of import so we can set the user agent first
-// This must be below your `window.navigator` hack above
-const io = require('socket.io-client/socket.io');
 const socket = io('https://light-art.herokuapp.com', {});
 
 socket.on('connect', () => {
@@ -22,12 +21,12 @@ socket.on('updateState', function (data) {
   });
 
 class App extends Component {
-
   render() {
     return (
       <View style={styles.container}>
-        <Text>Press my button:</Text>
+        <Text>--- Press the button ---</Text>
         <MyButton />
+        <Footer />
       </View>
     );
   }
@@ -47,6 +46,13 @@ class MyButton extends Component {
     );
   }
 }
+
+function Footer() {
+  return (
+      <Text>Made with <Entypo name="heart-outlined" size={20} color="turquoise" /> by Stephanie </Text>
+  );
+}
+
 
 const styles = StyleSheet.create({
   container: {
