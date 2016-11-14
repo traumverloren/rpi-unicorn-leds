@@ -29,16 +29,15 @@ var io = require('socket.io').listen(server);
 console.log("STARTING SERVER 🌈 🦄 ✨");
 
 // TURN OFF auth for now.
-//
-require('socketio-auth')(io, {
-  authenticate: function (socket, data, callback) {
-    if (data.key == process.env.SOCKET_KEY) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Bad credentials"))
-    }
-  }
-});
+// require('socketio-auth')(io, {
+//   authenticate: function (socket, data, callback) {
+//     if (data.key == process.env.SOCKET_KEY) {
+//       return callback(null, true);
+//     } else {
+//       return callback(new Error("Bad credentials"))
+//     }
+//   }
+// });
 
 var piClient = {};
 
