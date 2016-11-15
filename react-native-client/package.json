@@ -10,6 +10,8 @@
     "exponent": "~11.0.2",
     "react": "~15.3.2",
     "react-native": "git+https://github.com/exponentjs/react-native#sdk-11.0.3",
+    "react-native-dropdownalert": "^2.1.0",
     "socket.io": "^1.5.1"
-  }
+  },
+  "devDependencies": {}
 }

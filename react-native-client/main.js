@@ -3,12 +3,12 @@ import React, { Component } from 'react';
 import { Entypo, FontAwesome } from '@exponent/vector-icons';
 import io from 'socket.io-client/socket.io';
 import { Font } from 'exponent';
+import DropdownAlert from 'react-native-dropdownalert';
 
 import {
   StyleSheet,
   Text,
   View,
-  ListView,
   TouchableHighlight,
 } from 'react-native';
 
@@ -17,10 +17,6 @@ const socket = io('https://light-art.herokuapp.com', {});
 socket.on('connect', () => {
   console.log('React Native is connected to the Server!');
 });
-
-socket.on('updateState', function (data) {
-    console.log(data);
-  });
 
 class App extends Component {
   async componentDidMount() {
@@ -33,6 +29,7 @@ class App extends Component {
 
   constructor () {
     super()
+    this.showAlert = this.showAlert.bind(this)
     this.state = { piConnected: true, fontLoaded: false }
     this.fetchPiStatus()
 
@@ -60,19 +57,54 @@ class App extends Component {
     // if pi is disconnected, set state to false
     socket.on('piDisconnected', () => {
       this.setState({ piConnected: false})
+      this.showAlert('error');
     })
+  }
+
+  showAlert = (type) => {
+    switch (type) {
+      case 'error':
+        this.dropdown.alertWithType(type, 'oh nooos!  (╯°□°）╯︵ ┻━┻ ', 'The raspberry pi is currently offline. Try again later.')
+      break;
+      case 'custom':
+        this.dropdown.alertWithType(type, 'yay!  \\ (•◡•) /', 'Light Design Submitted to the Raspberry Pi! Thanks for creating art!')
+      break;
+    }
+  }
+
+  closeAlert = () => {
+    this.dropdown.onClose()
+  }
+  onClose(data) {
+    console.log(data)
   }
 
   sendMessage = (message, data) => {
     socket.emit(message, data)
   }
 
+
   render() {
     return (
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
-        <Board sendMessage={this.sendMessage} piConnected={this.state.piConnected} />
+        <Board sendMessage={this.sendMessage} showAlert={this.showAlert} piConnected={this.state.piConnected} />
         <Footer />
+        <DropdownAlert ref={(ref) => this.dropdown = ref}
+          closeInterval={5000}
+          onCancel={(data) => this.onClose(data)}
+          containerStyle={{
+            backgroundColor: 'limegreen',
+          }}
+          titleStyle={{
+            marginTop: 20,
+            fontSize: 16,
+            textAlign: 'left',
+            fontWeight: 'bold',
+            color: 'white',
+            backgroundColor: 'transparent',
+          }}
+          showCancel={true}/>
       </View>
     );
   }
@@ -114,10 +146,10 @@ class Board extends Component {
   submitBoard = () => {
     this.setState({isSubmitted: true})
     this.props.sendMessage('stateChanged', {message: "Light Design Submitted", squares: this.state.squares } )
+    this.props.showAlert('custom')
   }
 
   handlePress = (id) => {
-    console.log(id)
     const squares = this.state.squares.slice()
     squares[id].isSelected = !squares[id].isSelected
     squares[id].color = this.state.color
@@ -125,16 +157,16 @@ class Board extends Component {
   }
 
   render () {
-    var submitButton = 'submit-button' + (this.state.isSubmitted || !this.props.piConnected ? '-disabled' : '');
-    var resetButton = 'reset-button' + (!this.props.piConnected ? '-disabled' : '');
-
-    // if (this.state.isSubmitted) {
-    //   var alert = <Text style={styles.alertSuccess} >Light Design Submitted to the Raspberry Pi! Thanks!</Text>;
-    // }
-    //
-    // if (!this.props.piConnected) {
-    //   alert = <Text style={styles.alertDanger}>Raspberry Pi is currently offline. <FontAwesome name="frown-o" /> Try again later!</Text>;
-    // }
+    if (this.state.isSubmitted) {
+      var submitButtonStyling = styles.submitButtonDisabled
+      var resetButtonStyling = styles.resetButton
+    } else if (!this.props.piConnected) {
+      var submitButtonStyling = styles.submitButtonDisabled
+      var resetButtonStyling = styles.resetButtonDisabled
+    } else {
+      var submitButtonStyling = styles.submitButton
+      var resetButtonStyling = styles.resetButton
+    }
 
     return (
       <View style={styles.board}>
@@ -152,10 +184,9 @@ class Board extends Component {
         </View>
         <View style={styles.buttons}>
           <TouchableHighlight
+            disabled={this.state.isSubmitted || !this.props.piConnected}
             underlayColor='#32CD32'
-            onPress={this.submitButton}
-            disabled={this.state.isSubmitted}
-            style={styles.submitButton}
+            style={submitButtonStyling}
             onPress={() => this.submitBoard()}>
               <Text>Submit</Text>
           </TouchableHighlight>
@@ -163,7 +194,7 @@ class Board extends Component {
           <TouchableHighlight
             underlayColor='#b22222'
             disabled={!this.props.piConnected}
-            style={styles.resetButton}
+            style={resetButtonStyling}
             onPress={() => this.clearBoard()}>
               <Text>Clear</Text>
           </TouchableHighlight>
@@ -192,7 +223,6 @@ function Square({ isSelected, onPress, color }) {
         <View />
       </TouchableHighlight>
     </View>
-
   );
 }
 
@@ -205,9 +235,9 @@ function Header({ fontLoaded }) {
           <Text style={{ ...Font.style('PressStart2P-Regular'), fontSize: 16, marginTop: 20 }}>
             Make Pixel LED Art
           </Text>
-          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginTop: 20, marginBottom: 4,marginLeft: 40, marginRight: 40, textAlign: 'center', color: 'blue' }}><FontAwesome name="magic" size={14} /> Pick colors.</Text>
-          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, marginLeft: 40, marginRight: 40, textAlign: 'center', color: 'teal' }}><FontAwesome name="hand-pointer-o" size={14} /> Click squares.</Text>
-          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginLeft: 40, marginBottom: 4, marginRight: 40, textAlign: 'center', color: 'green'}}><FontAwesome name="envelope-o" size={14} /> Send a design to my Raspberry Pi!</Text>
+          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginTop: 10, marginBottom: 4, textAlign: 'center', color: 'blue' }}><FontAwesome name="magic" size={14} /> Pick colors.</Text>
+          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, textAlign: 'center', color: 'teal' }}><FontAwesome name="hand-pointer-o" size={14} /> Click squares.</Text>
+          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, textAlign: 'center', color: 'limegreen'}}><FontAwesome name="envelope-o" size={14} /> Send a design to my Raspberry Pi!</Text>
         </View>
         ) : null
       }
@@ -254,7 +284,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   squares: {
-    flex: .7,
+    flex: .8,
     marginTop: 15,
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -263,24 +293,44 @@ const styles = StyleSheet.create({
     width: 300
   },
   buttons: {
-    flex: .3,
+    flex: .2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   submitButton: {
     backgroundColor: '#00FF00',
-    borderWidth: 6,
+    borderWidth: 4,
     borderStyle: 'solid',
-    borderColor: '#00FF00',
+    borderColor: 'limegreen',
+    padding: 4,
     margin: 5,
   },
   resetButton: {
     backgroundColor: 'red',
-    borderWidth: 6,
+    borderWidth: 4,
     borderStyle: 'solid',
-    borderColor: 'red',
+    borderColor: 'firebrick',
+    padding: 4,
     margin: 5,
+  },
+  submitButtonDisabled: {
+    backgroundColor: '#00FF00',
+    borderWidth: 4,
+    borderStyle: 'solid',
+    borderColor: 'limegreen',
+    padding: 4,
+    margin: 5,
+    opacity: 0.4,
+  },
+  resetButtonDisabled: {
+    backgroundColor: 'red',
+    borderWidth: 4,
+    borderStyle: 'solid',
+    borderColor: 'firebrick',
+    padding: 4,
+    margin: 5,
+    opacity: 0.4
   }
 });
 
