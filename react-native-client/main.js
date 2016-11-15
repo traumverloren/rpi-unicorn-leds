@@ -71,13 +71,12 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
-        <Board />
+        <Board sendMessage={this.sendMessage} piConnected={this.state.piConnected} />
         <Footer />
       </View>
     );
   }
 }
-
 
 class Board extends Component {
   constructor(props) {
@@ -108,14 +107,12 @@ class Board extends Component {
     return { squares, isSubmitted: false, color: {r: 255, g: 235, b: 59} }
   }
 
-  clearBoard = (event) => {
+  clearBoard = () => {
     this.setState(this.getBoard())
-    event.target.blur()
   }
 
-  submitBoard = (event) => {
+  submitBoard = () => {
     this.setState({isSubmitted: true})
-    event.target.blur()
     this.props.sendMessage('stateChanged', {message: "Light Design Submitted", squares: this.state.squares } )
   }
 
@@ -128,39 +125,67 @@ class Board extends Component {
   }
 
   render () {
+    var submitButton = 'submit-button' + (this.state.isSubmitted || !this.props.piConnected ? '-disabled' : '');
+    var resetButton = 'reset-button' + (!this.props.piConnected ? '-disabled' : '');
+
+    // if (this.state.isSubmitted) {
+    //   var alert = <Text style={styles.alertSuccess} >Light Design Submitted to the Raspberry Pi! Thanks!</Text>;
+    // }
+    //
+    // if (!this.props.piConnected) {
+    //   alert = <Text style={styles.alertDanger}>Raspberry Pi is currently offline. <FontAwesome name="frown-o" /> Try again later!</Text>;
+    // }
+
     return (
-      <View style={styles.squares}>
-        {this.state.squares.map((square) => (
-          <View key={square.id} style={styles.square}>
-            <Square
-              id={square.id}
-              isSelected={square.isSelected}
-              coords={square.coords}
-              color={square.color}
-              onPress={() => this.handlePress(square.id)} />
-          </View>
-        ))}
+      <View style={styles.board}>
+        <View style={styles.squares}>
+          {this.state.squares.map((square) => (
+            <View key={square.id} style={styles.square}>
+              <Square
+                id={square.id}
+                isSelected={square.isSelected}
+                coords={square.coords}
+                color={square.color}
+                onPress={() => this.handlePress(square.id)} />
+            </View>
+          ))}
+        </View>
+        <View style={styles.buttons}>
+          <TouchableHighlight
+            underlayColor='#32CD32'
+            onPress={this.submitButton}
+            disabled={this.state.isSubmitted}
+            style={styles.submitButton}
+            onPress={() => this.submitBoard()}>
+              <Text>Submit</Text>
+          </TouchableHighlight>
+
+          <TouchableHighlight
+            underlayColor='#b22222'
+            disabled={!this.props.piConnected}
+            style={styles.resetButton}
+            onPress={() => this.clearBoard()}>
+              <Text>Clear</Text>
+          </TouchableHighlight>
       </View>
+    </View>
     )
   }
 }
 
 function Square({ isSelected, onPress, color }) {
-  // var squareStyle;
-  //
-  // if (isSelected) {
-  //   squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: '100%', height: '100%'}
-  // } else {
-  //   squareStyle = {backgroundColor: '#2c3e50', width: '100%', height: '100%'}
-  // }
-
   var squareStyle;
 
-  // if (isSelected) {
-  //   squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: '100%', height: '100%'}
-  // } else {
+  if (isSelected) {
+    squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: 38, height: 38}
+  } else {
     squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
-  // }
+  }
+  if (isSelected) {
+    squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: 38, height: 38}
+  } else {
+    squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
+  }
   return (
     <View>
       <TouchableHighlight onPress={onPress} style={squareStyle}>
@@ -180,7 +205,7 @@ function Header({ fontLoaded }) {
           <Text style={{ ...Font.style('PressStart2P-Regular'), fontSize: 16, marginTop: 20 }}>
             Make Pixel LED Art
           </Text>
-          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginTop: 10, marginBottom: 4,marginLeft: 40, marginRight: 40, textAlign: 'center', color: 'blue' }}><FontAwesome name="magic" size={14} /> Pick colors.</Text>
+          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginTop: 20, marginBottom: 4,marginLeft: 40, marginRight: 40, textAlign: 'center', color: 'blue' }}><FontAwesome name="magic" size={14} /> Pick colors.</Text>
           <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, marginLeft: 40, marginRight: 40, textAlign: 'center', color: 'teal' }}><FontAwesome name="hand-pointer-o" size={14} /> Click squares.</Text>
           <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginLeft: 40, marginBottom: 4, marginRight: 40, textAlign: 'center', color: 'green'}}><FontAwesome name="envelope-o" size={14} /> Send a design to my Raspberry Pi!</Text>
         </View>
@@ -212,7 +237,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: .1,
-    marginBottom: 5,
+    marginBottom: 2,
   },
   square: {
     width: 38,
@@ -222,13 +247,40 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: 'black'
   },
+  board: {
+    flex: .7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  },
   squares: {
     flex: .7,
+    marginTop: 15,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
     justifyContent: 'center',
     width: 300
+  },
+  buttons: {
+    flex: .3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  submitButton: {
+    backgroundColor: '#00FF00',
+    borderWidth: 6,
+    borderStyle: 'solid',
+    borderColor: '#00FF00',
+    margin: 5,
+  },
+  resetButton: {
+    backgroundColor: 'red',
+    borderWidth: 6,
+    borderStyle: 'solid',
+    borderColor: 'red',
+    margin: 5,
   }
 });
 
