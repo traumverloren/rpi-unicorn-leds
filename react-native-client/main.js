@@ -29,7 +29,7 @@ class App extends Component {
 
   constructor () {
     super()
-    this.state = { piConnected: true, fontLoaded: false }
+    this.state = { piConnected: true, fontLoaded: false, color: {r: 184, g: 0, b: 0}}
     this.fetchPiStatus()
 
     socket.on('connect', () => {
@@ -87,7 +87,9 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
+        <ColorSelector currentColor={this.state.color}/>
         <Board
+          color={this.state.color}
           sendMessage={this.sendMessage}
           showAlert={this.showAlert}
           piConnected={this.state.piConnected}
@@ -116,10 +118,11 @@ class App extends Component {
 class Board extends Component {
   constructor(props) {
     super()
-    this.state = this.getBoard()
+    this.state = this.getBoard(props.color)
+      console.log(this.state)
   }
 
-  getBoard = () => {
+  getBoard = (color) => {
     const squares = []
 
     // i is the square number 0 - 63.
@@ -139,7 +142,7 @@ class Board extends Component {
     }
 
     // set initial state with 64-array of squares
-    return { squares, isSubmitted: false, color: {r: 255, g: 235, b: 59} }
+    return { squares, isSubmitted: false, color: color }
   }
 
   clearBoard = () => {
@@ -208,8 +211,8 @@ function Button({ name, isSubmitted, piConnected, fontLoaded, onPress }) {
   return (
     <View>
       <TouchableHighlight
-        disabled={isSubmitted || !piConnected}
-        underlayColor='#32CD32'
+        disabled={(name == 'Submit' && isSubmitted) || !piConnected}
+        underlayColor={name == 'Submit' ? '#32CD32' : '#b22222'}
         style={name == 'Submit' ? submitButtonStyling : resetButtonStyling}
         onPress={onPress}>
           <View>
@@ -232,11 +235,7 @@ function Square({ isSelected, onPress, color }) {
   } else {
     squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
   }
-  if (isSelected) {
-    squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: 38, height: 38}
-  } else {
-    squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
-  }
+
   return (
     <View>
       <TouchableHighlight onPress={onPress} style={squareStyle}>
@@ -277,6 +276,31 @@ function Footer({ fontLoaded }) {
     );
 }
 
+function ColorSelector ({ colors, currentColor }) {
+  console.log(currentColor)
+  return (
+    <View style={ styles.card }>
+      { colors.map((color) => (
+        <ColorSwatch color={ color } key={ color } currentColor={currentColor} />
+      )) }
+    </View>
+  )
+}
+
+ColorSelector.defaultProps = {
+  colors: ['#FF0000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB',
+           '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB'],
+}
+
+function ColorSwatch({ currentColor, color }) {
+  var isSelected = color == currentColor
+  return (
+      <View style={[styles.swatch, {backgroundColor: color}, isSelected && styles.selectedSwatch]} />
+  )
+}
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -293,6 +317,22 @@ const styles = StyleSheet.create({
     flex: .1,
     marginBottom: 2,
   },
+  card: {
+    flex: .1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    width: 220,
+    backgroundColor: '#dcdcdc',
+  },
+  swatch: {
+    width: 25,
+    height: 25,
+  },
+  selectedSwatch: {
+    borderStyle: 'solid',
+    borderWidth: 2,
+    borderColor: '#848484',
+  },
   square: {
     width: 38,
     height: 38,
@@ -302,7 +342,7 @@ const styles = StyleSheet.create({
     borderColor: 'black'
   },
   board: {
-    flex: .7,
+    flex: .6,
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
