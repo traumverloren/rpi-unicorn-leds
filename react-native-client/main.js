@@ -174,18 +174,26 @@ class Board extends Component {
             </View>
           ))}
         </View>
-        <Buttons
-          isSubmitted={this.state.isSubmitted}
-          piConnected={this.props.piConnected}
-          fontLoaded={this.props.fontLoaded}
-          submitBoard={() => this.submitBoard()}
-          clearBoard={() => this.clearBoard()} />
+        <View style={styles.buttons}>
+          <Button
+            name="Submit"
+            isSubmitted={this.state.isSubmitted}
+            piConnected={this.props.piConnected}
+            fontLoaded={this.props.fontLoaded}
+            onPress={() => this.submitBoard()} />
+          <Button
+            name="Clear"
+            isSubmitted={this.state.isSubmitted}
+            piConnected={this.props.piConnected}
+            fontLoaded={this.props.fontLoaded}
+            onPress={() => this.clearBoard()} />
+        </View>
       </View>
     )
   }
 }
 
-function Buttons({ isSubmitted, piConnected, fontLoaded, submitBoard, clearBoard }) {
+function Button({ name, isSubmitted, piConnected, fontLoaded, onPress }) {
   if (isSubmitted) {
     var submitButtonStyling = styles.submitButtonDisabled
     var resetButtonStyling = styles.resetButton
@@ -198,33 +206,19 @@ function Buttons({ isSubmitted, piConnected, fontLoaded, submitBoard, clearBoard
   }
 
   return (
-    <View style={styles.buttons}>
+    <View>
       <TouchableHighlight
         disabled={isSubmitted || !piConnected}
         underlayColor='#32CD32'
-        style={submitButtonStyling}
-        onPress={submitBoard}>
+        style={name == 'Submit' ? submitButtonStyling : resetButtonStyling}
+        onPress={onPress}>
           <View>
             {
               fontLoaded ? (
-                <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18}} >Submit</Text>
+                <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18}} >{name}</Text>
               ) : null
             }
           </View>
-      </TouchableHighlight>
-
-      <TouchableHighlight
-        underlayColor='#b22222'
-        disabled={!piConnected}
-        style={resetButtonStyling}
-        onPress={clearBoard}>
-        <View>
-          {
-            fontLoaded ? (
-              <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18}} >Clear</Text>
-            ) : null
-          }
-        </View>
       </TouchableHighlight>
     </View>
   )
@@ -361,7 +355,7 @@ const styles = StyleSheet.create({
     padding: 4,
     margin: 5,
     opacity: 0.4
-  }
+  },
 });
 
 Exponent.registerRootComponent(App);
