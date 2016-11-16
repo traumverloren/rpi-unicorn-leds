@@ -29,7 +29,7 @@ class App extends Component {
 
   constructor () {
     super()
-    this.state = { piConnected: true, fontLoaded: false, color: {r: 184, g: 0, b: 0}}
+    this.state = { piConnected: true, fontLoaded: false, color: {hex: '#FF0000', rgb: {r: 184, g: 0, b: 0}} }
     this.fetchPiStatus()
 
     socket.on('connect', () => {
@@ -81,7 +81,6 @@ class App extends Component {
   sendMessage = (message, data) => {
     socket.emit(message, data)
   }
-
 
   render() {
     return (
@@ -197,6 +196,7 @@ class Board extends Component {
 }
 
 function Button({ name, isSubmitted, piConnected, fontLoaded, onPress }) {
+  // TODO improve by putting this logic in the styles?
   if (isSubmitted) {
     var submitButtonStyling = styles.submitButtonDisabled
     var resetButtonStyling = styles.resetButton
@@ -228,10 +228,11 @@ function Button({ name, isSubmitted, piConnected, fontLoaded, onPress }) {
 }
 
 function Square({ isSelected, onPress, color }) {
+  console.log(color)
   var squareStyle;
 
   if (isSelected) {
-    squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: 38, height: 38}
+    squareStyle = {backgroundColor: color.hex, width: 38, height: 38}
   } else {
     squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
   }
@@ -272,34 +273,40 @@ function Footer({ fontLoaded }) {
             <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18,}} >Made with <Entypo name="heart-outlined" size={20} color="red" /> by Stephanie </Text>
           ) : null
         }
-    </View>
-    );
+      </View>
+  );
 }
 
 function ColorSelector ({ colors, currentColor }) {
   console.log(currentColor)
+  // TODO add press action
   return (
     <View style={ styles.card }>
       { colors.map((color) => (
-        <ColorSwatch color={ color } key={ color } currentColor={currentColor} />
+        <ColorSwatch color={ color } key={ color.hex } currentColor={ currentColor } />
       )) }
     </View>
   )
 }
 
 ColorSelector.defaultProps = {
-  colors: ['#FF0000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB',
-           '#EB9694', '#FAD0C3', '#FEF3BD', '#C1E1C5', '#BEDADC', '#C4DEF6', '#BED3F3', '#D4C4FB'],
+  colors: [{hex: '#FF0000', rgb: {r: 184, g: 0, b: 0}}, {hex: '#DB3E00', rgb: {r: 219, g: 62, b: 0}},
+           {hex: '#FCCB00', rgb: {r: 252, g: 203, b:0}}, {hex: '#008B02', rgb: {r: 0, g: 139, b: 2}},
+           {hex: '#006B76', rgb: {r: 0, g: 118, b: 107}}, {hex: '#1273DE', rgb: {r: 18, g: 115, b: 222}},
+           {hex: '#004DCF', rgb: {r: 0, g: 77, b: 207}}, {hex: '#5300EB', rgb: {r: 83, g: 0, b: 235}},
+           {hex: '#EB9694', rgb: {r: 235, g: 150, b: 148}}, {hex: '#FAD0C3', rgb: {r: 250, g: 208, b: 195}},
+           {hex: '#FEF3BD', rgb: {r: 254, g: 243, b: 189}}, {hex: '#C1E1C5', rgb: {r: 193, g: 225, b: 197}},
+           {hex: '#BEDADC', rgb: {r: 190, g: 218, b: 220}}, {hex: '#C4DEF6', rgb: {r: 196, g: 222, b: 246}},
+           {hex: '#BED3F3', rgb: {r: 190, g: 211, b: 243}}, {hex: '#D4C4FB', rgb: {r: 212, g: 196, b: 251}}]
 }
 
 function ColorSwatch({ currentColor, color }) {
-  var isSelected = color == currentColor
+  // TODO add press action
+  var isSelected = color.hex == currentColor.hex
   return (
-      <View style={[styles.swatch, {backgroundColor: color}, isSelected && styles.selectedSwatch]} />
+      <View style={[styles.swatch, {backgroundColor: color.hex}, isSelected && styles.selectedSwatch]} />
   )
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
