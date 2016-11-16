@@ -29,7 +29,6 @@ class App extends Component {
 
   constructor () {
     super()
-    this.showAlert = this.showAlert.bind(this)
     this.state = { piConnected: true, fontLoaded: false }
     this.fetchPiStatus()
 
@@ -88,8 +87,12 @@ class App extends Component {
     return (
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
-        <Board sendMessage={this.sendMessage} showAlert={this.showAlert} piConnected={this.state.piConnected} />
-        <Footer />
+        <Board
+          sendMessage={this.sendMessage}
+          showAlert={this.showAlert}
+          piConnected={this.state.piConnected}
+          fontLoaded={this.state.fontLoaded} />
+        <Footer fontLoaded={this.state.fontLoaded} />
         <DropdownAlert ref={(ref) => this.dropdown = ref}
           closeInterval={5000}
           onCancel={(data) => this.onClose(data)}
@@ -157,17 +160,6 @@ class Board extends Component {
   }
 
   render () {
-    if (this.state.isSubmitted) {
-      var submitButtonStyling = styles.submitButtonDisabled
-      var resetButtonStyling = styles.resetButton
-    } else if (!this.props.piConnected) {
-      var submitButtonStyling = styles.submitButtonDisabled
-      var resetButtonStyling = styles.resetButtonDisabled
-    } else {
-      var submitButtonStyling = styles.submitButton
-      var resetButtonStyling = styles.resetButton
-    }
-
     return (
       <View style={styles.board}>
         <View style={styles.squares}>
@@ -182,26 +174,60 @@ class Board extends Component {
             </View>
           ))}
         </View>
-        <View style={styles.buttons}>
-          <TouchableHighlight
-            disabled={this.state.isSubmitted || !this.props.piConnected}
-            underlayColor='#32CD32'
-            style={submitButtonStyling}
-            onPress={() => this.submitBoard()}>
-              <Text>Submit</Text>
-          </TouchableHighlight>
-
-          <TouchableHighlight
-            underlayColor='#b22222'
-            disabled={!this.props.piConnected}
-            style={resetButtonStyling}
-            onPress={() => this.clearBoard()}>
-              <Text>Clear</Text>
-          </TouchableHighlight>
+        <Buttons
+          isSubmitted={this.state.isSubmitted}
+          piConnected={this.props.piConnected}
+          fontLoaded={this.props.fontLoaded}
+          submitBoard={() => this.submitBoard()}
+          clearBoard={() => this.clearBoard()} />
       </View>
-    </View>
     )
   }
+}
+
+function Buttons({ isSubmitted, piConnected, fontLoaded, submitBoard, clearBoard }) {
+  if (isSubmitted) {
+    var submitButtonStyling = styles.submitButtonDisabled
+    var resetButtonStyling = styles.resetButton
+  } else if (!piConnected) {
+    var submitButtonStyling = styles.submitButtonDisabled
+    var resetButtonStyling = styles.resetButtonDisabled
+  } else {
+    var submitButtonStyling = styles.submitButton
+    var resetButtonStyling = styles.resetButton
+  }
+
+  return (
+    <View style={styles.buttons}>
+      <TouchableHighlight
+        disabled={isSubmitted || !piConnected}
+        underlayColor='#32CD32'
+        style={submitButtonStyling}
+        onPress={submitBoard}>
+          <View>
+            {
+              fontLoaded ? (
+                <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18}} >Submit</Text>
+              ) : null
+            }
+          </View>
+      </TouchableHighlight>
+
+      <TouchableHighlight
+        underlayColor='#b22222'
+        disabled={!piConnected}
+        style={resetButtonStyling}
+        onPress={clearBoard}>
+        <View>
+          {
+            fontLoaded ? (
+              <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18}} >Clear</Text>
+            ) : null
+          }
+        </View>
+      </TouchableHighlight>
+    </View>
+  )
 }
 
 function Square({ isSelected, onPress, color }) {
@@ -245,11 +271,15 @@ function Header({ fontLoaded }) {
   )
 }
 
-function Footer() {
+function Footer({ fontLoaded }) {
   return (
       <View style={styles.footer}>
-        <Text>Made with <Entypo name="heart-outlined" size={20} color="red" /> by Stephanie </Text>
-      </View>
+        {
+          fontLoaded ? (
+            <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18,}} >Made with <Entypo name="heart-outlined" size={20} color="red" /> by Stephanie </Text>
+          ) : null
+        }
+    </View>
     );
 }
 
