@@ -10,6 +10,7 @@ import {
   Text,
   View,
   TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 
 const socket = io('https://light-art.herokuapp.com', {});
@@ -82,11 +83,18 @@ class App extends Component {
     socket.emit(message, data)
   }
 
+  handleColorSelected = (color) => {
+    this.setState({ color: color })
+    console.log("handleColorSelected", this.state.color)
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
-        <ColorSelector currentColor={this.state.color}/>
+        <ColorSelector
+          currentColor={this.state.color}
+          onColorSelect={ this.handleColorSelected } />
         <Board
           color={this.state.color}
           sendMessage={this.sendMessage}
@@ -108,7 +116,7 @@ class App extends Component {
             color: 'white',
             backgroundColor: 'transparent',
           }}
-          showCancel={true}/>
+          showCancel={true} />
       </View>
     );
   }
@@ -117,8 +125,7 @@ class App extends Component {
 class Board extends Component {
   constructor(props) {
     super()
-    this.state = this.getBoard(props.color)
-      console.log(this.state)
+    this.state = this.getBoard(props.color.rgb)
   }
 
   getBoard = (color) => {
@@ -195,7 +202,25 @@ class Board extends Component {
   }
 }
 
-function Button({ name, isSubmitted, piConnected, fontLoaded, onPress }) {
+export const Square = ({ isSelected, onPress, color }) => {
+  var squareStyle;
+
+  if (isSelected) {
+    squareStyle = {backgroundColor: 'rgb(' + color.r + ',' + color.g + ',' + color.b + ')', width: 38, height: 38}
+  } else {
+    squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
+  }
+
+  return (
+    <View>
+      <TouchableHighlight onPress={onPress} style={squareStyle}>
+        <View />
+      </TouchableHighlight>
+    </View>
+  );
+}
+
+export const Button = ({ name, isSubmitted, piConnected, fontLoaded, onPress }) => {
   // TODO improve by putting this logic in the styles?
   if (isSubmitted) {
     var submitButtonStyling = styles.submitButtonDisabled
@@ -227,26 +252,7 @@ function Button({ name, isSubmitted, piConnected, fontLoaded, onPress }) {
   )
 }
 
-function Square({ isSelected, onPress, color }) {
-  console.log(color)
-  var squareStyle;
-
-  if (isSelected) {
-    squareStyle = {backgroundColor: color.hex, width: 38, height: 38}
-  } else {
-    squareStyle = {backgroundColor: '#2c3e50', width: 38, height: 38}
-  }
-
-  return (
-    <View>
-      <TouchableHighlight onPress={onPress} style={squareStyle}>
-        <View />
-      </TouchableHighlight>
-    </View>
-  );
-}
-
-function Header({ fontLoaded }) {
+export const Header = ({ fontLoaded }) => {
   return (
     <View style={styles.header}>
       {
@@ -265,7 +271,7 @@ function Header({ fontLoaded }) {
   )
 }
 
-function Footer({ fontLoaded }) {
+export const Footer = ({ fontLoaded }) => {
   return (
       <View style={styles.footer}>
         {
@@ -277,13 +283,16 @@ function Footer({ fontLoaded }) {
   );
 }
 
-function ColorSelector ({ colors, currentColor }) {
-  console.log(currentColor)
-  // TODO add press action
+export const ColorSelector = ({currentColor, color, colors, onColorSelect}) => {
+
   return (
     <View style={ styles.card }>
       { colors.map((color) => (
-        <ColorSwatch color={ color } key={ color.hex } currentColor={ currentColor } />
+        <ColorSwatch
+          color={ color }
+          key={ color.hex }
+          currentColor={ currentColor }
+          onPress={() => onColorSelect(color) } />
       )) }
     </View>
   )
@@ -300,18 +309,24 @@ ColorSelector.defaultProps = {
            {hex: '#BED3F3', rgb: {r: 190, g: 211, b: 243}}, {hex: '#D4C4FB', rgb: {r: 212, g: 196, b: 251}}]
 }
 
-function ColorSwatch({ currentColor, color }) {
+export const ColorSwatch = ({ currentColor, color, onPress }) => {
   // TODO add press action
-  var isSelected = color.hex == currentColor.hex
+
+  var isSelected = currentColor.hex == color.hex
   return (
-      <View style={[styles.swatch, {backgroundColor: color.hex}, isSelected && styles.selectedSwatch]} />
+    <TouchableOpacity
+      style={[styles.swatch, {backgroundColor: color.hex}, isSelected && styles.selectedSwatch]}
+      onPress={ onPress }
+      color={ color }>
+      <View />
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#dcdcdc',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'column',
@@ -329,7 +344,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: 220,
-    backgroundColor: '#dcdcdc',
+    backgroundColor: '#fff',
   },
   swatch: {
     width: 25,
@@ -338,7 +353,8 @@ const styles = StyleSheet.create({
   selectedSwatch: {
     borderStyle: 'solid',
     borderWidth: 2,
-    borderColor: '#848484',
+    borderColor: '#fff',
+    borderRadius: 3,
   },
   square: {
     width: 38,
