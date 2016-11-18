@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Linking,
   TouchableHighlight,
   TouchableOpacity,
 } from 'react-native';
@@ -225,13 +226,12 @@ export const Square = ({ isSelected, onPress, color }) => {
 }
 
 export const Button = ({ name, isSubmitted, piConnected, fontLoaded, onPress }) => {
-  // TODO improve by putting this logic in the styles?
-  if (isSubmitted) {
-    var submitButtonStyling = styles.submitButtonDisabled
-    var resetButtonStyling = styles.resetButton
-  } else if (!piConnected) {
+  if (!piConnected) {
     var submitButtonStyling = styles.submitButtonDisabled
     var resetButtonStyling = styles.resetButtonDisabled
+  } else if (isSubmitted) {
+  var submitButtonStyling = styles.submitButtonDisabled
+  var resetButtonStyling = styles.resetButton
   } else {
     var submitButtonStyling = styles.submitButton
     var resetButtonStyling = styles.resetButton
@@ -266,7 +266,7 @@ export const Header = ({ fontLoaded }) => {
             Make Pixel LED Art
           </Text>
           <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginTop: 10, marginBottom: 4, textAlign: 'center', color: 'blue' }}><FontAwesome name="magic" size={14} /> Pick colors.</Text>
-          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, textAlign: 'center', color: 'teal' }}><FontAwesome name="hand-pointer-o" size={14} /> Click squares.</Text>
+          <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, textAlign: 'center', color: 'teal' }}><FontAwesome name="hand-pointer-o" size={14} /> Touch squares.</Text>
           <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18, marginBottom: 4, textAlign: 'center', color: 'limegreen'}}><FontAwesome name="envelope-o" size={14} /> Send a design to my Raspberry Pi!</Text>
         </View>
         ) : null
@@ -276,11 +276,21 @@ export const Header = ({ fontLoaded }) => {
 }
 
 export const Footer = ({ fontLoaded }) => {
+
+  openURL = () => {
+    const url = 'https://traumverloren.github.io'
+    Linking.canOpenURL(url).then(() => {
+        return Linking.openURL(url)
+    })
+  }
+
   return (
       <View style={styles.footer}>
         {
           fontLoaded ? (
+            <TouchableHighlight onPress={this.openURL}>
             <Text style={{ ...Font.style('VT323-Regular'), fontSize: 18,}} >Made with <Entypo name="heart-outlined" size={20} color="red" /> by Stephanie </Text>
+            </TouchableHighlight>
           ) : null
         }
       </View>
