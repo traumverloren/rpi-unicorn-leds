@@ -30,7 +30,7 @@ class App extends Component {
 
   constructor () {
     super()
-    this.state = { piConnected: true, fontLoaded: false, color: {hex: '#FCCB00', rgb: {r: 252, g: 203, b:0}} }
+    this.state = { piConnected: true, fontLoaded: false, selectedColor: {hex: '#FCCB00', rgb: {r: 252, g: 203, b:0}} }
     this.fetchPiStatus()
 
     socket.on('connect', () => {
@@ -50,7 +50,6 @@ class App extends Component {
 
   handleColorSelected = (color) => {
     this.setState({ color: color })
-    console.log("handleColorSelected", this.state.color)
   }
 
   fetchPiStatus = () => {
@@ -89,8 +88,7 @@ class App extends Component {
   }
 
   handleChangeComplete = (color) => {
-    console.log("handleChangeComplete", color)
-    this.setState({ color: color });
+    this.setState({ selectedColor: color });
   };
 
   render() {
@@ -98,11 +96,10 @@ class App extends Component {
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
         <ColorSelector
-          color={this.state.color}
-          currentColor={this.state.color}
+          selectedColor={this.state.selectedColor}
           onChangeComplete={ this.handleChangeComplete } />
         <Board
-          color={this.state.color}
+          selectedColor={this.state.selectedColor}
           sendMessage={this.sendMessage}
           showAlert={this.showAlert}
           piConnected={this.state.piConnected}
@@ -131,10 +128,11 @@ class App extends Component {
 class Board extends Component {
   constructor(props) {
     super()
-    this.state = this.getBoard(props.color.rgb)
+    this.state = this.getBoard()
   }
 
-  getBoard = (color) => {
+  getBoard = () => {
+
     const squares = []
 
     // i is the square number 0 - 63.
@@ -154,7 +152,7 @@ class Board extends Component {
     }
 
     // set initial state with 64-array of squares
-    return { squares, isSubmitted: false, color: color }
+    return { squares, isSubmitted: false }
   }
 
   clearBoard = () => {
@@ -170,7 +168,7 @@ class Board extends Component {
   handlePress = (id) => {
     const squares = this.state.squares.slice()
     squares[id].isSelected = !squares[id].isSelected
-    squares[id].color = this.state.color
+    squares[id].color = this.props.selectedColor.rgb
     this.setState({squares: squares})
   }
 
@@ -289,17 +287,16 @@ export const Footer = ({ fontLoaded }) => {
   );
 }
 
-export const ColorSelector = ({ currentColor, color, colors, onChangeComplete }) => {
+export const ColorSelector = ({ selectedColor, colors, onChangeComplete }) => {
 
   const handleChange = (color) => { onChangeComplete(color) }
-
   return (
     <View style={ styles.card }>
       { colors.map((color) => (
         <ColorSwatch
           color={ color }
           key={ color.hex }
-          currentColor={ currentColor }
+          selectedColor={ selectedColor }
           onPress={() => handleChange(color) } />
       )) }
     </View>
@@ -308,21 +305,21 @@ export const ColorSelector = ({ currentColor, color, colors, onChangeComplete })
 
 ColorSelector.defaultProps = {
   colors: [{hex: '#FF0000', rgb: {r: 184, g: 0, b: 0}}, {hex: '#DB3E00', rgb: {r: 219, g: 62, b: 0}},
-           {hex: '#FCCB00', rgb: {r: 252, g: 203, b:0}}, {hex: '#008B02', rgb: {r: 0, g: 139, b: 2}},
-           {hex: '#006B76', rgb: {r: 0, g: 118, b: 107}}, {hex: '#1273DE', rgb: {r: 18, g: 115, b: 222}},
+           {hex: '#FCCB00', rgb: {r: 252, g: 203, b:0}}, {hex: '#32cd32', rgb: {r: 50, g: 205, b: 50}},
+           {hex: '#7BA328', rgb: {r: 123, g: 163, b: 40}}, {hex: '#1273DE', rgb: {r: 18, g: 115, b: 222}},
            {hex: '#004DCF', rgb: {r: 0, g: 77, b: 207}}, {hex: '#5300EB', rgb: {r: 83, g: 0, b: 235}},
            {hex: '#EB9694', rgb: {r: 235, g: 150, b: 148}}, {hex: '#FAD0C3', rgb: {r: 250, g: 208, b: 195}},
            {hex: '#FEF3BD', rgb: {r: 254, g: 243, b: 189}}, {hex: '#C1E1C5', rgb: {r: 193, g: 225, b: 197}},
-           {hex: '#BEDADC', rgb: {r: 190, g: 218, b: 220}}, {hex: '#C4DEF6', rgb: {r: 196, g: 222, b: 246}},
+           {hex: '#CADAA9', rgb: {r: 202, g: 218, b: 169}}, {hex: '#C4DEF6', rgb: {r: 196, g: 222, b: 246}},
            {hex: '#BED3F3', rgb: {r: 190, g: 211, b: 243}}, {hex: '#D4C4FB', rgb: {r: 212, g: 196, b: 251}}]
 }
 
-export const ColorSwatch = ({ currentColor, color, onPress }) => {
-  var isSelected = currentColor.hex == color.hex
+export const ColorSwatch = ({ selectedColor, color, onPress }) => {
+  var isSelected = selectedColor.hex == color.hex
 
   return (
     <TouchableOpacity
-      style={[styles.swatch, {backgroundColor: color.hex}, isSelected && styles.selectedSwatch]}
+      style={[styles.swatch, {backgroundColor: 'rgb(' + color.rgb.r + ',' + color.rgb.g + ',' + color.rgb.b + ')'}, isSelected && styles.selectedSwatch]}
       onPress={ onPress }
       color={ color }>
       <View />
