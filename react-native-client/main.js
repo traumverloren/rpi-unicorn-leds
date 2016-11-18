@@ -30,7 +30,7 @@ class App extends Component {
 
   constructor () {
     super()
-    this.state = { piConnected: true, fontLoaded: false, color: {hex: '#FF0000', rgb: {r: 184, g: 0, b: 0}} }
+    this.state = { piConnected: true, fontLoaded: false, color: {hex: '#FCCB00', rgb: {r: 252, g: 203, b:0}} }
     this.fetchPiStatus()
 
     socket.on('connect', () => {
@@ -46,6 +46,11 @@ class App extends Component {
 
       socket.emit("clientConnected")
     })
+  }
+
+  handleColorSelected = (color) => {
+    this.setState({ color: color })
+    console.log("handleColorSelected", this.state.color)
   }
 
   fetchPiStatus = () => {
@@ -83,18 +88,19 @@ class App extends Component {
     socket.emit(message, data)
   }
 
-  handleColorSelected = (color) => {
-    this.setState({ color: color })
-    console.log("handleColorSelected", this.state.color)
-  }
+  handleChangeComplete = (color) => {
+    console.log("handleChangeComplete", color)
+    this.setState({ color: color });
+  };
 
   render() {
     return (
       <View style={styles.container}>
         <Header fontLoaded={this.state.fontLoaded} />
         <ColorSelector
+          color={this.state.color}
           currentColor={this.state.color}
-          onColorSelect={ this.handleColorSelected } />
+          onChangeComplete={ this.handleChangeComplete } />
         <Board
           color={this.state.color}
           sendMessage={this.sendMessage}
@@ -283,7 +289,9 @@ export const Footer = ({ fontLoaded }) => {
   );
 }
 
-export const ColorSelector = ({currentColor, color, colors, onColorSelect}) => {
+export const ColorSelector = ({ currentColor, color, colors, onChangeComplete }) => {
+
+  const handleChange = (color) => { onChangeComplete(color) }
 
   return (
     <View style={ styles.card }>
@@ -292,7 +300,7 @@ export const ColorSelector = ({currentColor, color, colors, onColorSelect}) => {
           color={ color }
           key={ color.hex }
           currentColor={ currentColor }
-          onPress={() => onColorSelect(color) } />
+          onPress={() => handleChange(color) } />
       )) }
     </View>
   )
@@ -310,9 +318,8 @@ ColorSelector.defaultProps = {
 }
 
 export const ColorSwatch = ({ currentColor, color, onPress }) => {
-  // TODO add press action
-
   var isSelected = currentColor.hex == color.hex
+
   return (
     <TouchableOpacity
       style={[styles.swatch, {backgroundColor: color.hex}, isSelected && styles.selectedSwatch]}
