@@ -1,0 +1,15 @@
+.Board-grid {
+  list-style: none;
+  height: 40vmax;
+  width: 40vmax;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  margin: auto;
+  padding: 0px;
+}
+
+.Square-container {
+  flex: 0 0 12.5%;
+  height: 12.5%;
+}

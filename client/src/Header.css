@@ -1,3 +1,8 @@
 .Header {
-  padding-top: 20px;
-  }
+  padding: 10px 20px 0 16px;
+  margin-bottom: -5px;
+}
+
+.Header-title {
+  margin-bottom: -10px;
+}

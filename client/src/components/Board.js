@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Square from './Square'
 import { HuePicker } from 'react-color'
+import '../Board.css'
 
 class Board extends Component {
   constructor(props) {
@@ -57,11 +58,11 @@ class Board extends Component {
     var resetButton = 'reset-button' + (!this.props.piConnected ? '-disabled' : '');
 
     if (this.state.isSubmitted) {
-      var alert = <div className="alert-success" role="alert">Light Design Submitted to the Raspberry Pi! Thanks!</div>;
+      var alert = <div className="alert-success" role="alert">Light Design Sent to the Raspberry Pi!</div>;
     }
 
     if (!this.props.piConnected) {
-      alert = <div className="alert-danger" role="alert">Raspberry Pi is currently offline. <i className="fa fa-frown-o" aria-hidden="true"></i> Try again later!</div>;
+      alert = <div className="alert-danger" role="alert">Raspberry Pi is currently offline. <i className="fa fa-frown-o" aria-hidden="true"></i></div>;
     }
 
     return (
@@ -74,19 +75,10 @@ class Board extends Component {
               onChangeComplete={ this.handleChangeComplete }/>
           </div>
         </div>
-        <div style={{
-          listStyle: 'none',
-          height: '40vmax',
-          width: '40vmax',
-          display: 'flex',
-          flexWrap: 'wrap',
-          alignItems: 'stretch',
-          margin: 'auto',
-          padding: '0px'
-        }}>
+        <div className='Board-grid'>
           {this.state.squares.map((square) => (
             <div key={square.id}
-                 style={{flex: '0 0 12.5%', height: '12.5%'}}>
+                 className='Square-container'>
               <Square
                 id={square.id}
                 isSelected={square.isSelected}
@@ -113,7 +105,6 @@ class Board extends Component {
           </button>
         </div>
       </div>
-
     )
   }
 }
