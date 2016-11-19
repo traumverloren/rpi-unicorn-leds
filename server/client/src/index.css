@@ -80,7 +80,7 @@ button{
   left: 0;
   right: 0;
   text-align: center;
-  line-height: 1;
+  line-height: 1.4;
   overflow: hidden;
   -webkit-transform: translateY(-50px);
   -webkit-animation: slideDown 2.5s 1.0s 1 ease forwards;
@@ -91,14 +91,14 @@ button{
 .alert-danger {
   background-color: Red;
   font-family: 'VT323', monospace;
-  font-size: 22px;
+  font-size: 18px;
   position: absolute;
   z-index: 101;
   top: 0;
   left: 0;
   right: 0;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.4;
   overflow: hidden;
 
 }
