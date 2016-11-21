@@ -15,61 +15,6 @@ p {
   font-size: 18px;
 }
 
-.square {
-  border: 1px solid #000;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-}
-
-.fa-heart-o {
-  -webkit-transition: -webkit-transform .8s ease-in-out;
-  transition: transform .8s ease-in-out;
-  /*color: 'DarkTurquoise';*/
-}
-
-.fa-heart-o:hover {
-  -webkit-transform: rotate(360);
-  transform: rotate(360deg);
-}
-
-button{
-  font-family: 'VT323', monospace;
-  text-decoration: none;
-  text-align: center;
-  font-size: 16px;
-}
-
-.submit-button-disabled {
-  background-color: Lime;
-  border: 6px ridge Lime;
-  opacity: 0.4;
-}
-
-.submit-button {
-  background-color: Lime;
-  border: 6px ridge Lime;
-}
-
-.submit-button:active {
-  background-color: LimeGreen;
-}
-
-.reset-button {
-  background-color: Red;
-  border: 6px ridge Red;
-}
-
-.reset-button-disabled {
-  background-color: Red;
-  border: 6px ridge Red;
-  opacity: 0.4;
-}
-
-.reset-button:active {
-  background-color: FireBrick;
-}
-
 .alert-success {
   background-color: Lime;
   font-family: 'VT323', monospace;
@@ -100,7 +45,6 @@ button{
   text-align: center;
   line-height: 1.4;
   overflow: hidden;
-
 }
 
 @-webkit-keyframes slideDown {

@@ -196,7 +196,7 @@ class Board extends Component {
             fontLoaded={this.props.fontLoaded}
             onPress={() => this.submitBoard()} />
           <Button
-            name="Clear"
+            name="Reset"
             isSubmitted={this.state.isSubmitted}
             piConnected={this.props.piConnected}
             fontLoaded={this.props.fontLoaded}
@@ -240,9 +240,9 @@ export const Button = ({ name, isSubmitted, piConnected, fontLoaded, onPress }) 
   return (
     <View>
       <TouchableHighlight
-        disabled={(name == 'Submit' && isSubmitted) || !piConnected}
-        underlayColor={name == 'Submit' ? '#32CD32' : '#b22222'}
-        style={name == 'Submit' ? submitButtonStyling : resetButtonStyling}
+        disabled={(name === 'Submit' && isSubmitted) || !piConnected}
+        underlayColor={name === 'Submit' ? '#32CD32' : '#b22222'}
+        style={name === 'Submit' ? submitButtonStyling : resetButtonStyling}
         onPress={onPress}>
           <View>
             {
@@ -325,7 +325,7 @@ ColorSelector.defaultProps = {
 }
 
 export const ColorSwatch = ({ selectedColor, color, onPress }) => {
-  var isSelected = selectedColor.hex == color.hex
+  var isSelected = selectedColor.hex === color.hex
 
   return (
     <TouchableOpacity

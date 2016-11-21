@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import Square from './Square'
+import Button from './Button'
 import { HuePicker } from 'react-color'
-import '../Board.css'
+import '../css/Board.css'
 
 class Board extends Component {
   constructor(props) {
@@ -54,9 +55,6 @@ class Board extends Component {
   }
 
   render() {
-    var submitButton = 'submit-button' + (this.state.isSubmitted || !this.props.piConnected ? '-disabled' : '');
-    var resetButton = 'reset-button' + (!this.props.piConnected ? '-disabled' : '');
-
     if (this.state.isSubmitted) {
       var alert = <div className="alert-success" role="alert">Light Design Sent to the Raspberry Pi!</div>;
     }
@@ -89,20 +87,16 @@ class Board extends Component {
           ))}
         </div>
         <div>
-          <button
-            className={submitButton}
-            disabled={this.state.isSubmitted}
-            style={{margin: '5px'}}
-            onClick={(event) => this.submitBoard(event)}>
-            Submit
-          </button>
-          <button
-            className={resetButton}
-            disabled={!this.props.piConnected}
-            style={{margin: '5px'}}
-            onClick={(event) => this.clearBoard(event)}>
-            Clear
-          </button>
+          <Button
+            name='Submit'
+            isSubmitted={this.state.isSubmitted}
+            piConnected={this.props.piConnected}
+            onClick={(event) => this.submitBoard(event)} />
+          <Button
+            name='Reset'
+            isSubmitted={this.state.isSubmitted}
+            piConnected={this.props.piConnected}
+            onClick={(event) => this.clearBoard(event)} />
         </div>
       </div>
     )
