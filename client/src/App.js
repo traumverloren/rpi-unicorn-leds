@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import './App.css'
 import Board from './components/Board'
 import io from 'socket.io-client'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import './css/App.css'
 
 let socket = io('https://light-art.herokuapp.com', {})
 
@@ -50,7 +50,6 @@ class App extends Component {
         <Header />
         <Board sendMessage={this.sendMessage} piConnected={this.state.piConnected} />
         <Footer />
-
       </div>
     )
   }

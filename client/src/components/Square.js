@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import '../css/Square.css'
 
 function Square({ isSelected, onClick, color }) {
   var squareStyle;
@@ -10,7 +11,7 @@ function Square({ isSelected, onClick, color }) {
   }
 
   return (
-    <div className='square'
+    <div className='Square'
         onClick={onClick}
         style={squareStyle}>
       </div>
@@ -28,4 +29,4 @@ Square.PropTypes = {
   onClick: PropTypes.func.isRequired,
 }
 
-export default Square;
+export default Square

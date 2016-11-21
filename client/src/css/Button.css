@@ -1,0 +1,37 @@
+button{
+  font-family: 'VT323', monospace;
+  text-decoration: none;
+  text-align: center;
+  font-size: 16px;
+  margin: 5px;
+}
+
+.submit-button-disabled {
+  background-color: Lime;
+  border: 6px ridge Lime;
+  opacity: 0.4;
+}
+
+.submit-button {
+  background-color: Lime;
+  border: 6px ridge Lime;
+}
+
+.submit-button:active {
+  background-color: LimeGreen;
+}
+
+.reset-button {
+  background-color: Red;
+  border: 6px ridge Red;
+}
+
+.reset-button-disabled {
+  background-color: Red;
+  border: 6px ridge Red;
+  opacity: 0.4;
+}
+
+.reset-button:active {
+  background-color: FireBrick;
+}
