@@ -27,6 +27,8 @@ Using SocketIO, it is pushes state changes from the native and web apps to the R
 
 - **ReactJS web app**
 
+![video demo reactjs](http://i.giphy.com/iqmBca5pEgDlK.gif)
+
   Written in ES6 using React, this client is located on the server. Users on the web can create pixel art designs to display on the Raspberry Pi.
 
   _Features:_
@@ -37,6 +39,8 @@ Using SocketIO, it is pushes state changes from the native and web apps to the R
 
 
 - **React-Native mobile app**
+
+![video demo react-native](http://i.giphy.com/11Lhkbs59VYOGY.gif)
 
   Written in ES6 using React-Native (with the help of [ExponentJS](https://www.getexponent.com)), this client provides a native experience for both iOS and Android. Users can natively create pixel art designs to display on the Raspberry Pi.
 
