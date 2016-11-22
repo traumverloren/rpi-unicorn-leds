@@ -2,8 +2,6 @@
 
 ![rainbow lights](sparkleline.gif)
 
-![rainbow lights](sparkleline.gif)
-
 This is my final project for [Harvard's CS50 Course](https://www.edx.org/course/introduction-computer-science-harvardx-cs50x) and first attempt at raspberry pi interactive art. The goal is to interact remotely with the raspberry pi and be able to create pixel art pattern to display on the UnicornHAT.
 
 I used a lot of new, unfamiliar stuff for this project! e.g. Python, SocketIO, React-Native. 😏 But I had a lot of fun learning and figuring out how to build this project!
