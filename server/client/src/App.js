@@ -5,7 +5,7 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import './css/App.css'
 
-let socket = io('https://light-art.herokuapp.com', {})
+const socket = io('https://light-art.herokuapp.com', {})
 
 class App extends Component {
   constructor () {

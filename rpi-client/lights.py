@@ -3,7 +3,7 @@
 # source $VIRTUAL_ENV/bin/activate
 
 # To RUN:
-# python lights.py
+# sudo python lights.py
 
 import os
 import time
@@ -15,7 +15,6 @@ from socketIO_client import SocketIO
 logging.getLogger('socketIO-client').setLevel(logging.DEBUG)
 
 socketIO = SocketIO('https://light-art.herokuapp.com')
-
 
 def connect():
     print('connected to the server')
