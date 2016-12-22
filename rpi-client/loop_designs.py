@@ -14,24 +14,59 @@ If the smiley looks sad, change the rotation from 0 to 180.
 
 unicorn.set_layout(unicorn.AUTO)
 unicorn.rotation(180)
-unicorn.brightness(0.5)
+unicorn.brightness(0.3)
 width,height=unicorn.get_shape()
 
 # Every line needs to be exactly 8 characters
 # but you can have as many lines as you like.
-ASCIIPIC = [
-     "  X  X  "
-    ,"        "
-    ,"X      X"
-    ," XXXXXX "
+HEART = [
+     " XX XX  "
+    ,"XXXXXXX "
+    ,"XXXXXXX "
+    ," XXXXX  "
+    ,"  XXX   "
+    ,"   X    "
     ,"        "
     ,"        "
     ,"        "
     ]
+
+SMILEY = [
+     "  X  X  "
+    ,"        "
+    ,"X      X"
+    ," X    X "
+    ,"  XXXX  "
+    ,"        "
+    ,"        "
+    ,"        "
+    ,"        "
+    ]
+
+YO = [
+     "  X   X "
+    ,"  X   X "
+    ,"   XXX  "
+    ,"    X   "
+    ,"    X   "
+    ,"        "
+    ,"   XXX  "
+    ,"  X   X "
+    ,"  X   X "
+    ,"   XXX  "
+    ,"        "
+    ,"        "
+    ,"        "
+    ,"        "
+    ,"        "
+    ]
+
+patterns = [HEART,SMILEY, YO]
+
 i = -1
 offset = 30
 
-def step():
+def step(ASCIIPIC):
     global i
     i = 0 if i>=100*len(ASCIIPIC) else i+1 # avoid overflow
     for h in range(height):
@@ -55,6 +90,13 @@ def step():
                 unicorn.set_pixel(w, h, int(r),int(g),int(b))
     unicorn.show()
 
+def rotate_pattern(pattern):
+    for _ in " "*30:
+        step(pattern)
+        sleep(0.3)
+
 while True:
-    step()
-    sleep(0.2)
+    for pattern in patterns:
+        rotate_pattern(pattern)
+        unicorn.off()
+        sleep(1)
