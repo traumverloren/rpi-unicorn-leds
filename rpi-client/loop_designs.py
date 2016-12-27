@@ -14,76 +14,76 @@ If the smiley looks sad, change the rotation from 0 to 180.
 
 unicorn.set_layout(unicorn.AUTO)
 unicorn.rotation(180)
-unicorn.brightness(0.3)
+unicorn.brightness(0.4)
 width,height=unicorn.get_shape()
 
 # Every line needs to be exactly 8 characters
 # but you can have as many lines as you like.
 HEART = [
-     " XX XX  "
-    ,"XXXXXXX "
-    ,"XXXXXXX "
-    ," XXXXX  "
-    ,"  XXX   "
-    ,"   X    "
-    ,"        "
-    ,"        "
-    ,"        "
+     "           "
+    ," XX XX     "
+    ,"XXXXXXX    "
+    ,"XXXXXXX    "
+    ," XXXXX     "
+    ,"  XXX      "
+    ,"   X       "
+    ,"           "
+    ]
+
+LIGHT = [
+     "                                                                   "
+    ,"   X    X   XXX  X  X XXXXX   X   X X   X   XXX   X  XXX   XXXX    "
+    ,"   X    X  X     X  X   X     XX XX X   X   X  X  X  X  X  X       "
+    ,"   X    X  X     X  X   X     X X X  X X    X  X  X  X   X XXX     "
+    ,"   X    X  X XXX XXXX   X     X   X   X     XXX   X  X   X X       "
+    ,"   X    X  X   X X  X   X     X   X   X     X  X  X  X  X  X       "
+    ,"   XXXX X   XXX  X  X   X     X   X   X     X   X X  XXX   XXXX    "
+    ,"                                                                   "
     ]
 
 SMILEY = [
-     "  X  X  "
-    ,"        "
-    ,"X      X"
-    ," X    X "
-    ,"  XXXX  "
-    ,"        "
-    ,"        "
-    ,"        "
-    ,"        "
+     "      XXXX      "
+    ,"     XXXXXX     "
+    ,"    XX XX XX    "
+    ,"    XXXXXXXX    "
+    ,"    XXXXXXXX    "
+    ,"    X XXXX X    "
+    ,"     X    X     "
+    ,"      XXXX      "
     ]
 
 YO = [
-     "  X   X "
-    ,"  X   X "
-    ,"   XXX  "
-    ,"    X   "
-    ,"    X   "
-    ,"        "
-    ,"   XXX  "
-    ,"  X   X "
-    ,"  X   X "
-    ,"   XXX  "
-    ,"        "
-    ,"        "
-    ,"        "
-    ,"        "
-    ,"        "
+     "                  "
+    ,"   X   X  XXX     "
+    ,"   X   X X   X    "
+    ,"    X X  X   X    "
+    ,"     X   X   X    "
+    ,"     X   X   X    "
+    ,"     X    XXX     "
+    ,"                  "
     ]
 
-patterns = [HEART,SMILEY, YO]
+patterns = [LIGHT,HEART,SMILEY,LIGHT,YO]
 
-i = -1
-offset = 30
+offset = 50
+i = 0
 
 def step(ASCIIPIC):
     global i
-    i = 0 if i>=100*len(ASCIIPIC) else i+1 # avoid overflow
-    for h in range(height):
-        for w in range(width):
+    i = 0 if i>=100*len(ASCIIPIC[0]) else i+1 # avoid overflow
+
+    for w in range(width):
+        for h in range(height):
             j = 0.0
-            r = 0#x * 32
-            g = 0#y * 32
-            hw = h + w / 4
-            r = (math.cos((h+j)/2.0) + math.cos((w+j)/2.0)) * 64.0 + 128.0
-            g = (math.sin((h+j)/1.5) + math.sin((w+j)/2.0)) * 64.0 + 128.0
-            b = (math.sin((h+j)/2.0) + math.cos((w+j)/1.5)) * 64.0 + 128.0
+            r = (math.cos((h+j)/1.0) + math.sin((w+j)/1.0)) * 64.0 + 128.0
+            g = (math.cos((h+j)/2.0) + math.cos((w+j)/2.0)) * 64.0 + 128.0
+            b = (math.sin((h+j)/2.0) + math.cos((w+j)/2.0)) * 64.0 + 128.0
             r = max(0, min(255, r + offset))
             g = max(0, min(255, g + offset))
             b = max(0, min(255, b + offset))
 
-            hPos = (i+h) % len(ASCIIPIC)
-            chr = ASCIIPIC[hPos][w]
+            wPos = (i+w) % len(ASCIIPIC[0])
+            chr = ASCIIPIC[h][wPos]
             if chr == ' ':
                 unicorn.set_pixel(w, h, 0, 0, 0)
             else:
@@ -91,9 +91,9 @@ def step(ASCIIPIC):
     unicorn.show()
 
 def rotate_pattern(pattern):
-    for _ in " "*30:
+    for _ in " "*200:
         step(pattern)
-        sleep(0.3)
+        sleep(0.1)
 
 while True:
     for pattern in patterns:
