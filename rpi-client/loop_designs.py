@@ -5,29 +5,23 @@ import colorsys
 import math
 import time
 import unicornhat as unicorn
-
-
-print("""ASCII Pic
-You should see a scrolling image, defined in the below variable ASCIIPIC.
-If the smiley looks sad, change the rotation from 0 to 180.
-""")
+import numpy
 
 unicorn.set_layout(unicorn.AUTO)
 unicorn.rotation(180)
-unicorn.brightness(0.4)
 width,height=unicorn.get_shape()
 
-# Every line needs to be exactly 8 characters
-# but you can have as many lines as you like.
+# Height must be exactly 8 lines
+# but you can have as wide as you want.
 HEART = [
-     "           "
-    ," XX XX     "
-    ,"XXXXXXX    "
-    ,"XXXXXXX    "
-    ," XXXXX     "
-    ,"  XXX      "
-    ,"   X       "
-    ,"           "
+     "             "
+    ,"   XX XX     "
+    ,"  XXXXXXX    "
+    ,"  XXXXXXX    "
+    ,"   XXXXX     "
+    ,"    XXX      "
+    ,"     X       "
+    ,"             "
     ]
 
 LIGHT = [
@@ -69,15 +63,16 @@ offset = 50
 i = 0
 
 def step(ASCIIPIC):
+    unicorn.brightness(0.4)
     global i
     i = 0 if i>=100*len(ASCIIPIC[0]) else i+1 # avoid overflow
 
     for w in range(width):
         for h in range(height):
             j = 0.0
-            r = (math.cos((h+j)/1.0) + math.sin((w+j)/1.0)) * 64.0 + 128.0
-            g = (math.cos((h+j)/2.0) + math.cos((w+j)/2.0)) * 64.0 + 128.0
-            b = (math.sin((h+j)/2.0) + math.cos((w+j)/2.0)) * 64.0 + 128.0
+            r = (math.cos((h+j)/2.0) + math.cos((w+j)/2.0)) * 64.0 + 128.0
+            g = (math.sin((h+j)/1.5) + math.sin((w+j)/2.0)) * 64.0 + 128.0
+            b = (math.sin((h+j)/2.0) + math.cos((w+j)/1.5)) * 64.0 + 128.0
             r = max(0, min(255, r + offset))
             g = max(0, min(255, g + offset))
             b = max(0, min(255, b + offset))
@@ -95,8 +90,35 @@ def rotate_pattern(pattern):
         step(pattern)
         sleep(0.1)
 
+def poop_rainbows():
+    unicorn.brightness(0.3)
+
+    i = 0.0
+    offset = 30
+    t_end = time.time() + 10
+
+    while time.time() < t_end:
+        i = i + 0.3
+        for y in range(height):
+                for x in range(width):
+                        r = 0#x * 32
+                        g = 0#y * 32
+                        xy = x + y / 4
+                        r = (math.cos((x+i)/2.0) + math.cos((y+i)/2.0)) * 64.0 + 128.0
+                        g = (math.sin((x+i)/1.5) + math.sin((y+i)/2.0)) * 64.0 + 128.0
+                        b = (math.sin((x+i)/2.0) + math.cos((y+i)/1.5)) * 64.0 + 128.0
+                        r = max(0, min(255, r + offset))
+                        g = max(0, min(255, g + offset))
+                        b = max(0, min(255, b + offset))
+                        unicorn.set_pixel(x,y,int(r),int(g),int(b))
+        unicorn.show()
+        time.sleep(0.01)
+
 while True:
     for pattern in patterns:
         rotate_pattern(pattern)
         unicorn.off()
-        sleep(1)
+        sleep(3)
+        poop_rainbows()
+        unicorn.off()
+        sleep(3)
