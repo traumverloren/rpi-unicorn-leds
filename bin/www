@@ -7,6 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('server:server');
 var http = require('http');
+var colorTally = require('../colorTally');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -62,6 +63,8 @@ io.on('connection', function(socket){
   socket.on('stateChanged', function(state){
     console.log(`StateChanged on server: ${JSON.stringify(state)}`);
     io.emit("updateState", state);
+    let topColors = colorTally(state);
+    io.emit("shirtColors", topColors);
   });
 
   socket.on('piConnected', function(message){
