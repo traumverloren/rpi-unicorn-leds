@@ -64,6 +64,7 @@ io.on('connection', function(socket){
     console.log(`StateChanged on server: ${JSON.stringify(state)}`);
     io.emit("updateState", state);
     let topColors = colorTally(state);
+    console.log(`🎨: ${topColors}`);
     io.emit("shirtColors", topColors);
   });
 
