@@ -24,9 +24,9 @@ const findTopColors = (state) => {
 
   // return the top 2 colors to the shirt
   if (sortedColors.length === 1) {
-    return [sortedColors[0], sortedColors[0]];
+    return 'sortedColors[0] sortedColors[0]';
   } else {
-    return [sortedColors[0], sortedColors[1]];
+    return 'sortedColors[0] sortedColors[1]';
   }
 }
 
