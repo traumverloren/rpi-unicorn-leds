@@ -9,6 +9,7 @@ import os
 import time
 import logging
 import unicornhat as unicorn
+from collections import Counter
 
 from socketIO_client import SocketIO
 
@@ -33,9 +34,37 @@ def on_disconnect():
 def authenticated(*args):
     print('RPI is connected to the Server')
 
+def rgb_to_hex(red, green, blue):
+    return '%02x%02x%02x' % (red, green, blue)
+
+def send_colors_to_shirt(squares):
+    # filter only squares that are selected
+    selected_squares = list(filter(lambda square: square['isSelected'], squares))
+
+    # just return the color object
+    squares_rgb = list(map(lambda x: x['color'], selected_squares))
+
+    # convert rgb to hex colors
+    squares_hex = list(map(lambda x: rgb_to_hex(x['r'], x['g'], x['b']), squares_rgb))
+
+    # reduce and count colors
+    counted_colors = Counter(squares_hex)
+
+    # return sorted colors as list (array)
+    sorted_colors = list(counted_colors.keys())
+
+    shirt_message = ""
+
+    if (len(sorted_colors) == 1):
+        shirt_message = "%s %s" % (sorted_colors[0], sorted_colors[0])
+    else:
+        shirt_message = "%s %s" % (sorted_colors[0], sorted_colors[1])
+
+    print(shirt_message)
+    socketIO.emit('alertShirt', shirt_message)
+
 def updateState(data):
     squares = data['squares']
-    print(squares)
 
     # iterate through array and find the lights, turn them on.
     unicorn.set_layout(unicorn.AUTO)
@@ -51,6 +80,8 @@ def updateState(data):
             b = square['color']['b']
 
             unicorn.set_pixel(x,y,r,g,b)
+
+    send_colors_to_shirt(squares)
 
     unicorn.show()
     time.sleep(10)
