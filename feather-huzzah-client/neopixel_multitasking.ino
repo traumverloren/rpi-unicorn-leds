@@ -322,29 +322,30 @@ void piConnected(const char * payload, size_t length) {
 }
 
 void shirtColors(const char * colors, size_t length) {
+  Serial.printf(colors);
   char * pEnd;
-  long number = (long) strtol(colors, &pEnd, 16);
-  long r = number >> 16;
-  long g = number >> 8 & 0xFF;
-  long b = number & 0xFF;
+  int number = (int) strtol(colors, &pEnd, 16);
+  int r = number >> 16;
+  int g = number >> 8 & 0xFF;
+  int b = number & 0xFF;
+  Serial.printf("%d", r);
+  Serial.printf("%d", g);
+  Serial.printf("%d", b);
+  int number2 = (int) strtol(pEnd, &pEnd, 16);
+  int r2 = number2 >> 16;
+  int g2 = number2 >> 8 & 0xFF;
+  int b2 = number2 & 0xFF;
+  Serial.printf("%d", r2);
+  Serial.printf("%d", g2);
+  Serial.printf("%d", b2);
 
-  long number2 = (long) strtol(pEnd, &pEnd, 16);
-  long r2 = number2 >> 16;
-  long g2 = number2 >> 8 & 0xFF;
-  long b2 = number2 & 0xFF;
-
-
-  //  Strip1.Fade(Strip1.Color(255, 0, 0), Strip1.Color(0, 0, 255), 255, 10);
-  //  Strip2.Fade(Strip2.Color(255, 0, 0), Strip2.Color(0, 0, 255), 255, 10);
-  //  Strip3.Fade(Strip3.Color(255, 0, 0), Strip3.Color(0, 0, 255), 255, 10);
+//    Strip1.Fade(Strip1.Color(255, 0, 0), Strip1.Color(0, 0, 255), 255, 10);
+//    Strip2.Fade(Strip2.Color(255, 0, 0), Strip2.Color(0, 0, 255), 255, 10);
+//    Strip3.Fade(Strip3.Color(255, 0, 0), Strip3.Color(0, 0, 255), 255, 10);
 
   Strip1.TheaterChase(Strip1.Color(r,g,b), Strip1.Color(r2,g2,b2), 200);
   Strip2.TheaterChase(Strip2.Color(r,g,b), Strip2.Color(r2,g2,b2), 200);
   Strip3.TheaterChase(Strip3.Color(r,g,b), Strip3.Color(r2,g2,b2), 200);
-
-  Serial.printf(colors);
-  Serial.printf("%d, %d, %d\n", r,g,b);
-  Serial.printf("%d, %d, %d\n", r2,g2,b2);
 }
 
 void setup() {
@@ -352,9 +353,9 @@ void setup() {
   Strip1.begin();
   Strip2.begin();
   Strip3.begin();
-  Strip1.setBrightness(5);
-  Strip2.setBrightness(5);
-  Strip3.setBrightness(5);
+  Strip1.setBrightness(50);
+  Strip2.setBrightness(50);
+  Strip3.setBrightness(50);
   Strip1.show();
   Strip2.show();
   Strip3.show();
@@ -374,10 +375,11 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-  socket.on("connect", onConnect);
-  socket.on("disconnect", onDisconnect);
+//  socket.on("connect", onConnect);
+//  socket.on("disconnect", onDisconnect);
+//  socket.on("piConnected", piConnected);
+
   socket.on("shirtColors", shirtColors);
-  socket.on("piConnected", piConnected);
   socket.begin("light-art.herokuapp.com");
 }
 
