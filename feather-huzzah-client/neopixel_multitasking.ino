@@ -299,12 +299,15 @@ class NeoPatterns : public Adafruit_NeoPixel
 void Strip1Complete();
 void Strip2Complete();
 void Strip3Complete();
+void PixelsComplete();
 
 // Define some NeoPatterns for the two rings and the stick
 // as well as some completion routines
 NeoPatterns Strip1(31, 2, NEO_GRB + NEO_KHZ800, &Strip1Complete);
 NeoPatterns Strip2(34, 5, NEO_GRB + NEO_KHZ800, &Strip2Complete);
-NeoPatterns Strip3(27, 4, NEO_GRB + NEO_KHZ800, &Strip3Complete);
+NeoPatterns Strip3(26, 4, NEO_GRB + NEO_KHZ800, &Strip3Complete);
+NeoPatterns PixelsLeft(7, 14, NEO_GRB + NEO_KHZ800, &PixelsComplete);
+NeoPatterns PixelsRight(7, 12, NEO_GRB + NEO_KHZ800, &PixelsComplete);
 
 WiFiClient client;
 SocketIoClient socket;
@@ -328,16 +331,11 @@ void shirtColors(const char * colors, size_t length) {
   int r = number >> 16;
   int g = number >> 8 & 0xFF;
   int b = number & 0xFF;
-  Serial.printf("%d", r);
-  Serial.printf("%d", g);
-  Serial.printf("%d", b);
+
   int number2 = (int) strtol(pEnd, &pEnd, 16);
   int r2 = number2 >> 16;
   int g2 = number2 >> 8 & 0xFF;
   int b2 = number2 & 0xFF;
-  Serial.printf("%d", r2);
-  Serial.printf("%d", g2);
-  Serial.printf("%d", b2);
 
 //    Strip1.Fade(Strip1.Color(255, 0, 0), Strip1.Color(0, 0, 255), 255, 10);
 //    Strip2.Fade(Strip2.Color(255, 0, 0), Strip2.Color(0, 0, 255), 255, 10);
@@ -346,6 +344,9 @@ void shirtColors(const char * colors, size_t length) {
   Strip1.TheaterChase(Strip1.Color(r,g,b), Strip1.Color(r2,g2,b2), 200);
   Strip2.TheaterChase(Strip2.Color(r,g,b), Strip2.Color(r2,g2,b2), 200);
   Strip3.TheaterChase(Strip3.Color(r,g,b), Strip3.Color(r2,g2,b2), 200);
+
+  PixelsLeft.TheaterChase(PixelsLeft.Color(r,g,b), PixelsLeft.Color(r2,g2,b2), 200);
+  PixelsRight.TheaterChase(PixelsRight.Color(r,g,b), PixelsRight.Color(r2,g2,b2), 200);
 }
 
 void setup() {
@@ -353,12 +354,18 @@ void setup() {
   Strip1.begin();
   Strip2.begin();
   Strip3.begin();
-  Strip1.setBrightness(50);
-  Strip2.setBrightness(50);
-  Strip3.setBrightness(50);
+  PixelsLeft.begin();
+  PixelsRight.begin();
+  Strip1.setBrightness(10);
+  Strip2.setBrightness(10);
+  Strip3.setBrightness(10);
+  PixelsLeft.setBrightness(10);
+  PixelsRight.setBrightness(10);
   Strip1.show();
   Strip2.show();
   Strip3.show();
+  PixelsLeft.show();
+  PixelsRight.show();
 
   Serial.begin(115200); // Get ready for serial communications and display the connection status
   Serial.print("Connecting to WiFi network -  ");
@@ -389,6 +396,8 @@ void loop() {
   Strip1.Update();
   Strip2.Update();
   Strip3.Update();
+  PixelsLeft.Update();
+  PixelsRight.Update();
 }
 
 //------------------------------------------------------------
@@ -408,9 +417,16 @@ void Strip2Complete()
     Strip1.ColorWipe(0, 0);
     Strip2.ColorWipe(0, 0);
     Strip3.ColorWipe(0, 0);
+    PixelsLeft.ColorWipe(0, 0);
+    PixelsRight.ColorWipe(0, 0);
 }
 
 // Strip3 Completion Callback
 void Strip3Complete()
+{
+}
+
+// Individual Pixels Completion Callback
+void PixelsComplete()
 {
 }

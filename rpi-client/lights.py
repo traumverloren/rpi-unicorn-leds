@@ -84,7 +84,7 @@ def updateState(data):
     send_colors_to_shirt(squares)
 
     unicorn.show()
-    time.sleep(10)
+    time.sleep(7)
 
     unicorn.off()
 
