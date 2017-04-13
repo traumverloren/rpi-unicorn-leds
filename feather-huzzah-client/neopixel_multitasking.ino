@@ -1,6 +1,6 @@
 #include <ESP8266WiFi.h> // Include the ESP8266 Library
 #include <Adafruit_NeoPixel.h> // Include the adafruit Neopixel Library
-#include <SocketIoClient.h> // Include Socket.IO client library to communicate with RPi & Server!
+#include <WebSocketsClient.h> // Include Socket.IO client library to communicate with RPi & Server!
 
 const char* ssid     = "NETWORK_NAME";
 const char* password = "PASSWORD";
@@ -310,18 +310,69 @@ NeoPatterns PixelsLeft(7, 14, NEO_GRB + NEO_KHZ800, &PixelsComplete);
 NeoPatterns PixelsRight(7, 12, NEO_GRB + NEO_KHZ800, &PixelsComplete);
 
 WiFiClient client;
-SocketIoClient socket;
+WebSocketsClient webSocket;
 
-void onConnect(const char * payload, size_t length) {
-  Serial.printf("Huzzah connected to the server\n");
+#define MESSAGE_INTERVAL 10000
+#define HEARTBEAT_INTERVAL 5000
+
+
+uint64_t messageTimestamp = 0;
+uint64_t heartbeatTimestamp = 0;
+bool isConnected = false;
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+    String msg;
+    switch(type) {
+        case WStype_DISCONNECTED:
+            Serial.printf("[WSc] Disconnected!\n");
+            isConnected = false;
+            break;
+        case WStype_CONNECTED:
+            {
+                Serial.printf("[WSc] Connected to url: %s\n",  payload);
+                isConnected = true;
+
+                // send message to server when Connected
+                // socket.io upgrade confirmation message (required)
+                webSocket.sendTXT("5");
+            }
+            break;
+        case WStype_TEXT:
+            msg = String((char*)payload);
+            if(msg.startsWith("42")) {
+              trigger(getEventName(msg).c_str(), getEventPayload(msg).c_str(), length);
+            }
+            break;
+        case WStype_BIN:
+            Serial.printf("[WSc] get binary length: %u\n", length);
+            hexdump(payload, length);
+
+            // send data to server
+            // webSocket.sendBIN(payload, length);
+            break;
+    }
 }
 
-void onDisconnect(const char * payload, size_t length) {
-  Serial.printf("Huzzah disconnected from the server\n");
+const String getEventName(const String msg) {
+  return msg.substring(4, msg.indexOf("\"",4));
 }
 
-void piConnected(const char * payload, size_t length) {
-  Serial.printf("RPI is connected!\n");
+const String getEventPayload(const String msg) {
+  String result = msg.substring(msg.indexOf("\"",4)+2,msg.length()-1);
+  if(result.startsWith("\"")) {
+    result.remove(0,1);
+  }
+  if(result.endsWith("\"")) {
+    result.remove(result.length()-1);
+  }
+  return result;
+}
+
+void trigger(const char* event, const char * payload, size_t length) {
+  if(strcmp(event, "shirtColors") == 0) {
+    Serial.printf("[WSc] trigger event %s\n", event);
+    shirtColors(payload, length);
+  }
 }
 
 void shirtColors(const char * colors, size_t length) {
@@ -382,16 +433,29 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-//  socket.on("connect", onConnect);
-//  socket.on("disconnect", onDisconnect);
-//  socket.on("piConnected", piConnected);
-
-  socket.on("shirtColors", shirtColors);
-  socket.begin("light-art.herokuapp.com");
+  webSocket.beginSocketIO("light-art.herokuapp.com", 80);
+  webSocket.onEvent(webSocketEvent);
 }
 
+
 void loop() {
-  socket.loop();
+  webSocket.loop();
+
+  if(isConnected) {
+
+        uint64_t now = millis();
+
+        if(now - messageTimestamp > MESSAGE_INTERVAL) {
+            messageTimestamp = now;
+            // example socket.io message with type "messageType" and JSON payload
+            webSocket.sendTXT("42[\"messageType\",{\"greeting\":\"hello\"}]");
+        }
+        if((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL) {
+            heartbeatTimestamp = now;
+            // socket.io heartbeat message
+            webSocket.sendTXT("2");
+        }
+    }
 
   Strip1.Update();
   Strip2.Update();
