@@ -376,7 +376,6 @@ void trigger(const char* event, const char * payload, size_t length) {
 }
 
 void shirtColors(const char * colors, size_t length) {
-  Serial.printf(colors);
   char * pEnd;
   int number = (int) strtol(colors, &pEnd, 16);
   int r = number >> 16;
