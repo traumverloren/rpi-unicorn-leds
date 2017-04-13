@@ -437,7 +437,6 @@ void setup() {
   webSocket.onEvent(webSocketEvent);
 }
 
-
 void loop() {
   webSocket.loop();
 
@@ -455,6 +454,11 @@ void loop() {
             // socket.io heartbeat message
             webSocket.sendTXT("2");
         }
+    } else {
+      Serial.printf("[WSc] Reconnected!\n");
+      WiFi.begin(ssid, password);
+      webSocket.beginSocketIO("light-art.herokuapp.com", 80);
+      isConnected = true;
     }
 
   Strip1.Update();
