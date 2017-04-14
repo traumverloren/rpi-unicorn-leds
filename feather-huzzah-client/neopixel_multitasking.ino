@@ -432,32 +432,39 @@ void setup() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
+  delay(10);
   webSocket.beginSocketIO("light-art.herokuapp.com", 80);
   webSocket.onEvent(webSocketEvent);
+  delay(10);
 }
 
 void loop() {
   webSocket.loop();
+
+  delay(10);
 
   if(isConnected) {
 
         uint64_t now = millis();
 
         if(now - messageTimestamp > MESSAGE_INTERVAL) {
-            messageTimestamp = now;
-            // example socket.io message with type "messageType" and JSON payload
-            webSocket.sendTXT("42[\"messageType\",{\"greeting\":\"hello\"}]");
+          messageTimestamp = now;
+          // example socket.io message with type "messageType" and JSON payload
+          webSocket.sendTXT("42[\"messageType\",{\"greeting\":\"hello\"}]");
+          delay(10);
         }
         if((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL) {
-            heartbeatTimestamp = now;
-            // socket.io heartbeat message
-            webSocket.sendTXT("2");
+          heartbeatTimestamp = now;
+          // socket.io heartbeat message
+          webSocket.sendTXT("2");
+          delay(10);
         }
-    } else {
-      Serial.printf("[WSc] Reconnected!\n");
-      WiFi.begin(ssid, password);
-      webSocket.beginSocketIO("light-art.herokuapp.com", 80);
-      isConnected = true;
+   } else {
+        Serial.printf("[WSc] Reconnected!\n");
+        WiFi.begin(ssid, password);
+        delay(10);
+        webSocket.beginSocketIO("light-art.herokuapp.com", 80);
+        isConnected = true;
     }
 
   Strip1.Update();
