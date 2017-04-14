@@ -25,7 +25,7 @@ class Board extends Component {
             isSelected: false,
             color: {r: 44, g: 62, b: 80}
         })
-        i++
+        i++;
       }
     }
     // set initial state with 64-array of squares
@@ -33,25 +33,34 @@ class Board extends Component {
   }
 
   clearBoard = (event) => {
-    this.setState(this.getBoard())
-    event.target.blur()
+    this.setState(this.getBoard());
+    event.target.blur();
+  }
+
+  // only submit to Pi if there are actually some squares selected with color
+  checkBoard = (squares) => {
+    return squares.filter(square => (square.isSelected)).length > 0;
   }
 
   submitBoard = (event) => {
-    this.setState({isSubmitted: true})
-    event.target.blur()
-    this.props.sendMessage('stateChanged', {message: "Light Design Submitted", squares: this.state.squares } )
+    const squares = this.state.squares;
+    const hasColors = this.checkBoard(squares);
+    if (hasColors) {
+      this.setState({isSubmitted: true});
+      event.target.blur();
+      this.props.sendMessage('stateChanged', {message: "Light Design Submitted", squares: squares } );
+    }
   }
 
   handleChangeComplete = (color) => {
-    this.setState({ color: color.rgb })
+    this.setState({ color: color.rgb });
   }
 
   handleClick = (id) => {
-    const squares = this.state.squares.slice()
-    squares[id].isSelected = !squares[id].isSelected
-    squares[id].color = this.state.color
-    this.setState({squares: squares})
+    const squares = this.state.squares.slice();
+    squares[id].isSelected = !squares[id].isSelected;
+    squares[id].color = this.state.color;
+    this.setState({squares: squares});
   }
 
   render() {
@@ -103,4 +112,4 @@ class Board extends Component {
   }
 }
 
-export default Board
+export default Board;
