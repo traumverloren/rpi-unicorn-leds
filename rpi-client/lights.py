@@ -69,7 +69,7 @@ def updateState(data):
     # iterate through array and find the lights, turn them on.
     unicorn.set_layout(unicorn.AUTO)
     unicorn.rotation(180)
-    unicorn.brightness(0.3)
+    unicorn.brightness(0.6)
 
     for square in squares:
         if square['isSelected']:
