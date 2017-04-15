@@ -6,7 +6,6 @@ const char* ssid     = "NETWORK_NAME";
 const char* password = "PASSWORD";
 
 // Set up the Neopixel Strips
-
 // Pattern types supported:
 enum  pattern { NONE, RAINBOW_CYCLE, THEATER_CHASE, COLOR_WIPE, SCANNER, FADE };
 // Patern directions supported:
@@ -404,18 +403,18 @@ void setup() {
   Strip1.begin();
   Strip2.begin();
   Strip3.begin();
-  PixelsLeft.begin();
-  PixelsRight.begin();
-  Strip1.setBrightness(10);
-  Strip2.setBrightness(10);
-  Strip3.setBrightness(10);
-  PixelsLeft.setBrightness(10);
-  PixelsRight.setBrightness(10);
+//  PixelsLeft.begin();
+//  PixelsRight.begin();
+  Strip1.setBrightness(200);
+  Strip2.setBrightness(200);
+  Strip3.setBrightness(200);
+//  PixelsLeft.setBrightness(100);
+//  PixelsRight.setBrightness(100);
   Strip1.show();
   Strip2.show();
   Strip3.show();
-  PixelsLeft.show();
-  PixelsRight.show();
+//  PixelsLeft.show();
+//  PixelsRight.show();
 
   Serial.begin(115200); // Get ready for serial communications and display the connection status
   Serial.print("Connecting to WiFi network -  ");
@@ -445,26 +444,26 @@ void loop() {
 
   if(isConnected) {
 
-        uint64_t now = millis();
+      uint64_t now = millis();
 
-        if(now - messageTimestamp > MESSAGE_INTERVAL) {
-          messageTimestamp = now;
-          // example socket.io message with type "messageType" and JSON payload
-          webSocket.sendTXT("42[\"messageType\",{\"greeting\":\"hello\"}]");
-          delay(10);
-        }
-        if((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL) {
-          heartbeatTimestamp = now;
-          // socket.io heartbeat message
-          webSocket.sendTXT("2");
-          delay(10);
-        }
-   } else {
-        Serial.printf("[WSc] Reconnected!\n");
-        WiFi.begin(ssid, password);
+      if(now - messageTimestamp > MESSAGE_INTERVAL) {
+        messageTimestamp = now;
+        // example socket.io message with type "messageType" and JSON payload
+        webSocket.sendTXT("42[\"messageType\",{\"greeting\":\"hello\"}]");
         delay(10);
-        webSocket.beginSocketIO("light-art.herokuapp.com", 80);
-        isConnected = true;
+      }
+      if((now - heartbeatTimestamp) > HEARTBEAT_INTERVAL) {
+        heartbeatTimestamp = now;
+        // socket.io heartbeat message
+        webSocket.sendTXT("2");
+        delay(10);
+      }
+   } else {
+      Serial.printf("[WSc] Reconnected!\n");
+      WiFi.begin(ssid, password);
+      delay(10);
+      webSocket.beginSocketIO("light-art.herokuapp.com", 80);
+      isConnected = true;
     }
 
   Strip1.Update();
