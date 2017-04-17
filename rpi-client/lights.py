@@ -9,7 +9,7 @@ import os
 import time
 import logging
 import unicornhat as unicorn
-from collections import Counter
+from collections import Counter, OrderedDict
 
 from socketIO_client import SocketIO
 
@@ -47,11 +47,11 @@ def send_colors_to_shirt(squares):
     # convert rgb to hex colors
     squares_hex = list(map(lambda x: rgb_to_hex(x['r'], x['g'], x['b']), squares_rgb))
 
-    # reduce and count colors
+    # reduce, count colors, and sort in decreasing order
     counted_colors = Counter(squares_hex)
 
-    # return sorted colors as list (array)
-    sorted_colors = list(counted_colors.keys())
+    # return sort in decreasing order as list (array)
+    sorted_colors = list(OrderedDict(counted_colors.most_common()).keys())
 
     shirt_message = ""
 

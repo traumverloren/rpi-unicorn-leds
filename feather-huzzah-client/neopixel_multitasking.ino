@@ -2,10 +2,11 @@
 #include <Adafruit_NeoPixel.h> // Include the adafruit Neopixel Library
 #include <WebSocketsClient.h> // Include Socket.IO client library to communicate with RPi & Server!
 
-const char* ssid     = "NETWORK_NAME";
-const char* password = "PASSWORD";
+const char* ssid     = "Hingle McCringleberry";
+const char* password = "jhg60521";
 
 // Set up the Neopixel Strips
+
 // Pattern types supported:
 enum  pattern { NONE, RAINBOW_CYCLE, THEATER_CHASE, COLOR_WIPE, SCANNER, FADE };
 // Patern directions supported:
@@ -390,12 +391,16 @@ void shirtColors(const char * colors, size_t length) {
 //    Strip2.Fade(Strip2.Color(255, 0, 0), Strip2.Color(0, 0, 255), 255, 10);
 //    Strip3.Fade(Strip3.Color(255, 0, 0), Strip3.Color(0, 0, 255), 255, 10);
 
-  Strip1.TheaterChase(Strip1.Color(r,g,b), Strip1.Color(r2,g2,b2), 200);
-  Strip2.TheaterChase(Strip2.Color(r,g,b), Strip2.Color(r2,g2,b2), 200);
-  Strip3.TheaterChase(Strip3.Color(r,g,b), Strip3.Color(r2,g2,b2), 200);
+//  Strip1.Scanner(Strip1.Color(r,g,b), 80);
+//  Strip2.Scanner(Strip2.Color(r2,g2,b2), 80);
+//  Strip3.Scanner(Strip3.Color(r,g,b), 80);
 
-  PixelsLeft.TheaterChase(PixelsLeft.Color(r,g,b), PixelsLeft.Color(r2,g2,b2), 200);
-  PixelsRight.TheaterChase(PixelsRight.Color(r,g,b), PixelsRight.Color(r2,g2,b2), 200);
+  Strip1.TheaterChase(Strip1.Color(r,g,b), Strip1.Color(r2,g2,b2), 150);
+  Strip2.TheaterChase(Strip2.Color(r2,g2,b2), Strip2.Color(r,g,b), 150);
+  Strip3.TheaterChase(Strip3.Color(r,g,b), Strip3.Color(r2,g2,b2), 150);
+
+//  PixelsLeft.TheaterChase(PixelsLeft.Color(r,g,b), PixelsLeft.Color(r2,g2,b2), 200);
+//  PixelsRight.TheaterChase(PixelsRight.Color(r,g,b), PixelsRight.Color(r2,g2,b2), 200);
 }
 
 void setup() {
@@ -405,9 +410,9 @@ void setup() {
   Strip3.begin();
 //  PixelsLeft.begin();
 //  PixelsRight.begin();
-  Strip1.setBrightness(200);
-  Strip2.setBrightness(200);
-  Strip3.setBrightness(200);
+  Strip1.setBrightness(255);
+  Strip2.setBrightness(255);
+  Strip3.setBrightness(255);
 //  PixelsLeft.setBrightness(100);
 //  PixelsRight.setBrightness(100);
   Strip1.show();
