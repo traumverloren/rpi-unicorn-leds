@@ -25,6 +25,19 @@ Using SocketIO, it is pushes state changes from the native and web apps to the R
 
   The RPi is coded in Python, since the UnicornHAT library is in Python. I created a python program that serves as a client with the socketio server, using a [python socketio client library](https://github.com/invisibleroads/socketIO-client), and listens for incoming messages from the other clients. It then interprets the messages and creates the LED light pattern using the [UnicornHAT library](https://github.com/pimoroni/unicorn-hat/).
 
+  - **Feather Huzzah/Arduino + NeoPixels LED shirt**
+
+    ![video demo arduino shirt](https://media.giphy.com/media/QYF49Eh7GRRwk/giphy.gif)
+
+    Written in C++(ish), this client is inside my shirt! It receives a message from the RPi with the 2 most used colors in a user's art design, and displays them synchronously with the pixel art design as it is shown.
+
+    _Features:_
+
+    - Color Palette
+    - Notification if the Raspberry Pi is offline
+    - Responsive design
+
+
 - **ReactJS web app**
 
   ![video demo reactjs](http://i.giphy.com/iqmBca5pEgDlK.gif)
