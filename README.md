@@ -12,7 +12,7 @@ I used a lot of new, unfamiliar stuff for this project! e.g. Python, SocketIO, R
 
 ##### Schema:
 
-![raspberry pi socketio client server schema diagram](rasppiprojectschema.png)
+![raspberry pi socketio client server schema diagram](project-diagram-shirt.png)
 
 ##### Server: Express
 
