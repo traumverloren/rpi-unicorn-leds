@@ -386,21 +386,6 @@ void shirtColors(const char * colors, size_t length) {
   int r2 = number2 >> 16;
   int g2 = number2 >> 8 & 0xFF;
   int b2 = number2 & 0xFF;
-
-//    Strip1.Fade(Strip1.Color(255, 0, 0), Strip1.Color(0, 0, 255), 255, 10);
-//    Strip2.Fade(Strip2.Color(255, 0, 0), Strip2.Color(0, 0, 255), 255, 10);
-//    Strip3.Fade(Strip3.Color(255, 0, 0), Strip3.Color(0, 0, 255), 255, 10);
-
-//  Strip1.Scanner(Strip1.Color(r,g,b), 80);
-//  Strip2.Scanner(Strip2.Color(r2,g2,b2), 80);
-//  Strip3.Scanner(Strip3.Color(r,g,b), 80);
-
-  Strip1.TheaterChase(Strip1.Color(r,g,b), Strip1.Color(r2,g2,b2), 150);
-  Strip2.TheaterChase(Strip2.Color(r2,g2,b2), Strip2.Color(r,g,b), 150);
-  Strip3.TheaterChase(Strip3.Color(r,g,b), Strip3.Color(r2,g2,b2), 150);
-
-//  PixelsLeft.TheaterChase(PixelsLeft.Color(r,g,b), PixelsLeft.Color(r2,g2,b2), 200);
-//  PixelsRight.TheaterChase(PixelsRight.Color(r,g,b), PixelsRight.Color(r2,g2,b2), 200);
 }
 
 void setup() {

@@ -1,20 +1,20 @@
-import React, { Component } from 'react'
-import Square from './Square'
-import Button from './Button'
-import { HuePicker } from 'react-color'
-import '../css/Board.css'
+import React, { Component } from 'react';
+import Square from './Square';
+import Button from './Button';
+import { HuePicker } from 'react-color';
+import '../css/Board.css';
 
 class Board extends Component {
   constructor(props) {
-    super()
-    this.state = this.getBoard()
+    super();
+    this.state = this.getBoard();
   }
 
   getBoard = () => {
-    const squares = []
+    const squares = [];
 
     // i is the square number 0 - 63.
-    var i = 0
+    var i = 0;
 
     // Loop through to generate the x,y coords.
     for (let y = 0; y < 8; y++) {
